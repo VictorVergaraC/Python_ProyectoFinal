@@ -7,4 +7,5 @@ from .views import *
 
 urlpatterns = [
     path('', home_productos, name="home_productos"),
+    path('proteinas/', proteins, name="productos_proteinas"),
 ]

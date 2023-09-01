@@ -6,5 +6,5 @@ from django.template import Template, Context, loader
 from .views import *
 
 urlpatterns = [
-    path('carrito', carrito, 'carrito'),
+    path('carrito/', carrito, name='carrito'),
 ]
