@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Q
 from .models import *
 
 def home_productos(request):
@@ -6,7 +7,7 @@ def home_productos(request):
     titleSection = "Todos nuestros productos"
 
     message = ""
-    allProducts = Producto.objects.all()
+    allProducts = Producto.objects.all()[:10] # Con [:10] se agrega un límite de 10 registros
     
     products    = True
     if not allProducts:
@@ -14,11 +15,12 @@ def home_productos(request):
         products = False
 
     context = {
-        "title"      : pageTitle,
+        "title"       : pageTitle,
         "titleSection": titleSection,
-        "msg"        : message,
-        "products"   : products,
-        "allProducts": allProducts
+        "msg"         : message,
+        "products"    : products,
+        "allProducts" : allProducts,
+        "redirect"    : 'home_productos'
     }
 
     return render(request,
@@ -42,12 +44,60 @@ def proteins(request):
         "titleSection": titleSection,
         "msg"         : message,
         "products"    : products,
-        "allProducts" : allProducts
+        "allProducts" : allProducts,
+        "redirect"    : 'productos_proteinas'
     }
 
     return render(request,
                   "productos/home/home_contenido.html",
                   context)
 
+def creatines(request):
+    pageTitle = "Creatinas"
+    titleSection = "Todo en Creatinas"
 
-    pass
+    message   = ""
+    allProducts = Producto.objects.filter(categoria = 2)
+
+    products    = True
+    if not allProducts:
+        message  = "No existen productos! :("
+        products = False
+
+    context = {
+        "title"       : pageTitle,
+        "titleSection": titleSection,
+        "msg"         : message,
+        "products"    : products,
+        "allProducts" : allProducts,
+        "redirect"    : 'productos_creatinas'
+    }
+
+    return render(request,
+                  "productos/home/home_contenido.html",
+                  context)
+
+def otros(request):
+    pageTitle = "Otros Productos"
+    titleSection = "Todo en Otros Productos"
+
+    message   = ""
+    allProducts = Producto.objects.exclude(Q(categoria=1) | Q(categoria=2))
+
+    products    = True
+    if not allProducts:
+        message  = "No existen productos! :("
+        products = False
+
+    context = {
+        "title"       : pageTitle,
+        "titleSection": titleSection,
+        "msg"         : message,
+        "products"    : products,
+        "allProducts" : allProducts,
+        "redirect"    : 'productos_otros'
+    }
+
+    return render(request,
+                  "productos/home/home_contenido.html",
+                  context)

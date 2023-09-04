@@ -1,11 +1,12 @@
-from django.urls import path
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.template import Template, Context, loader
-
+from django.urls import path, include
 from .views import *
+from proyecto_final.views import login_request
+
+# app_name = 'ProductosApp'
 
 urlpatterns = [
-    path('', home_productos, name="home_productos"),
     path('proteinas/', proteins, name="productos_proteinas"),
+    path('creatinas/', creatines, name="productos_creatinas"),
+    path('otros/', otros, name="productos_otros"),
+    path('prueba/', login_request, name="login_request"),
 ]

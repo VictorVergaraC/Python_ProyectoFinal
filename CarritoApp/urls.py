@@ -7,4 +7,6 @@ from .views import *
 
 urlpatterns = [
     path('carrito/', carrito, name='carrito'),
+    path('agregar_al_carro/<id>', agregar_producto, name='agregar_al_carro'),
+
 ]
