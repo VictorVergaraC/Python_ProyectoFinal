@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.views import LogoutView
 from django.urls import path, include
 from ProductosApp.views import *
 from CarritoApp.views import *
@@ -10,7 +11,11 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_productos, name="home_productos" ),
-    path('login', login_request, name="login" ),
+    path('registrarme/', registrarme, name='registrarme'),
+    path('login/', login_request, name="login" ),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('usuario/misdatos/', mis_datos, name="mis_datos" ),
+
     path('productos/', include("ProductosApp.urls")),
     path('carrito/', include("CarritoApp.urls")),
 ]

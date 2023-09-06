@@ -40,10 +40,10 @@
                             Productos
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'productos_proteinas' %}"  >Proteínas</a></li>
-                            <li><a class="dropdown-item" href="{% url 'productos_creatinas' %}"  >Creatinas</a></li>
-                            <li><a class="dropdown-item" href="{% url 'productos_otros' %}">Otros</a></li>
-                            <li><a class="dropdown-item" href="#">Todos</a></li>
+                            <li><a class="dropdown-item" href="{% url 'productos_proteinas' %}">Proteínas</a></li>
+                            <li><a class="dropdown-item" href="{% url 'productos_creatinas' %}">Creatinas</a></li>
+                            <li><a class="dropdown-item" href="{% url 'productos_otros' %}"    >Otros</a></li>
+                            <li><a class="dropdown-item" href="{% url 'productos_todos' %}"    >Todos</a></li>
                         </ul>
                     </li>
 
@@ -57,9 +57,27 @@
                         <a class="nav-link" href="#">Contacto</a>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
-                    <a href="#" class="btn btn-primary">Cuenta</a>
-                </form>
+                {% if user.is_authenticated %}
+                <ul class="navbar-nav me-5 mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'mis_datos' %}">Mi Perfil</a></li>
+                            <li><a class="dropdown-item" href="#">Mis Pedidos</a></li>
+                            <li><a class="dropdown-item" href="#">...</a></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                {% else %}
+
+                <a href="{% url 'login' %}" class="btn btn-primary">Cuenta</a>
+                
+                {% endif %}
             </div>
         </div>
     </nav>

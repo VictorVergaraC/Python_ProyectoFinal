@@ -1,4 +1,4 @@
-{% extends "productos/home.html" %}
+{% extends "proyecto_final/home.html" %}
 
 {% load static %}
 
@@ -27,12 +27,16 @@
         </div>
         {% endfor %}
     </section>
-
+    
 </main>
 {% else %}
 <div class="alert alert-danger" role="alert">
     {{ msg }}
 </div>
 {% endif %}
-
+<p class="mt-2">
+    <strong>
+        {{ mensaje }}
+    </strong>
+</p>
 {% endblock %}

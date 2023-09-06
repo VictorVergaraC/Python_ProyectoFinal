@@ -1,0 +1,41 @@
+{% extends "proyecto_final/home.html" %}
+
+{% load static %}
+
+{% block title_page %} {{ title }} {% endblock %}
+
+{% block content %}
+
+<main class="d-flex">
+    <aside class="d-flex flex-column mx-2 p-2">
+        <h4 class="my-2">Datos Actuales</h4>
+        <table class="table">
+            <thead></thead>
+            <tbody>
+                <tr>
+                    <td>Nombre:</td>
+                    <td>{{ usuario.0.first_name }}</td>
+                </tr>
+                <tr>
+                    <td>Apellido:</td>
+                    <td>{{ usuario.0.last_name }}</td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td>{{ usuario.0.email }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </aside>
+    <aside class="d-flex flex-column mx-2 p-2">
+        <h4 class="my-2">Actualizar</h4>
+        <form action="{% url 'mis_datos' %}" method="post" class="d-flex flex-column">
+            {% csrf_token %}
+            {{ form.as_table }}
+            <input type="submit" value="Ingresar" class="btn btn-success btn-sm mt-2 w-50 mx-auto">
+        </form>
+        <p class="my-3">{{ msje }}</p>
+    </aside>
+</main>
+
+{% endblock %}

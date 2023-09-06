@@ -8,5 +8,6 @@ urlpatterns = [
     path('proteinas/', proteins, name="productos_proteinas"),
     path('creatinas/', creatines, name="productos_creatinas"),
     path('otros/', otros, name="productos_otros"),
+    path('todos/', todos, name="productos_todos"),
     path('prueba/', login_request, name="login_request"),
 ]

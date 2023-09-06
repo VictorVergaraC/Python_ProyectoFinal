@@ -1,0 +1,22 @@
+{% extends "proyecto_final/home.html" %}
+
+{% load static %}
+
+{% block title_page %} {{ title }} {% endblock %}
+
+{% block content %}
+
+<main class="d-flex">
+    <section class="d-flex flex-column mx-auto">
+        <h4 class="my-2">Registro de Usuarios</h4>
+        <p class="my-2">Podrás realizar pedidos, enterarte de nuestras ofertas, recibirás cupones de descuento y mucho más!</p>
+
+        <form action="{% url 'registrarme' %}" method="post" class="d-flex flex-column">
+            {% csrf_token %}
+            {{ form.as_table }}
+            <input type="submit" value="Registrarme" class="btn btn-success btn-sm mt-2 w-25 mx-auto">
+        </form>
+    </section>
+</main>
+
+{% endblock %}

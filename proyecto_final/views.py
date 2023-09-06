@@ -3,32 +3,126 @@ from ProductosApp.views import home_productos
 from ProductosApp.models import *
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.models import User
+from .forms import *
 
+from django.contrib.auth.decorators import login_required # para vistas basadas en funciones
 
 def login_request(request):
     if request.method == "POST":
-        form = AuthenticationForm(request, data = request.POST)
-        
+        form = AuthenticationForm(request, data=request.POST)
+
         if form.is_valid():
             data = form.cleaned_data
 
             username = data["username"]
-            clave    = data["password"]
+            clave = data["password"]
 
             usuario = authenticate(username=username, password=clave)
 
+            message = ""
+            allProducts = Producto.objects.all()[:10] # Con [:10] se agrega un límite de 10 registros
+            products    = True
+            if not allProducts:
+                message  = "No existen productos! :("
+                products = False
+
+            context = {
+                "title" : "Home",
+                "titleSection" : "Todos nuestros productos",
+                "msg" : message,
+                "mensaje": f"Usuario {username} logueado correctamente!",
+                "products": products,
+                "allProducts": allProducts
+            }
             if usuario is not None:
                 login(request, usuario)
-                return render(request, "", {})
+                return render(request, "ProductosApp/productos/home/home_contenido.html", context)
 
-            
+            # else ...
+            context = {
+                "form": AuthenticationForm(),
+                "title": "Login",
+                "msg": "Credenciales inválidas!"
+            }
+            return render(request, "proyecto_final/auth/login.html", context)
+        # else ...
+        context = {
+            "form": AuthenticationForm(),
+            "title": "Login",
+            "msg": "Datos inválidos!"
+        }
+        return render(request, "proyecto_final/auth/login.html", context)
+
     # else
     form = AuthenticationForm()
 
     context = {
-        "form" :form,
+        "form": form,
         "title": "Login",
-        "msg"  : ""
+        "msg": ""
     }
+
+    return render(request, "proyecto_final/auth/login.html", context)
+
+@login_required
+def mis_datos(request):
+    user    = request.user
+    usuario = User.objects.filter(username=user).values('first_name', 'last_name','email')
     
-    return render(request ,"login.html", context)
+    if request.method == "POST":
+        form = UserEditForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            user.email      = data["email"]
+            user.password1  = data["password1"]
+            user.password2  = data["password2"]
+            user.first_name = data["first_name"]
+            user.last_name  = data["last_name"]
+            user.save()
+
+            contexto = {
+               "title"    : "Mis Datos",
+                "usuario" : usuario,
+                "form"    : UserEditForm() ,
+                "msje"    : "Datos actualizados correctamente!"
+            }
+            return render(request, "proyecto_final/auth/mis_datos.html", contexto)
+
+
+    context = {
+        "title"   : "Mis Datos",
+        "usuario" : usuario,
+        "form"    : UserEditForm()
+    }
+    return render(request, "proyecto_final/auth/mis_datos.html", context)
+
+def registrarme(request):
+    
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+
+            username = data["username"]
+            form.save()
+
+            contexto = {
+                "title" : "Login",
+                "form"  : AuthenticationForm(),
+                "msg"   : "Usuario creado correctamente! Ahora puedes iniciar sesión ..."
+            }
+            return render(request,"proyecto_final/auth/login.html", contexto)
+        
+        contexto = {
+            "title" : "Login",
+            "form"  : AuthenticationForm(),
+            "msg"   : "Formulario inválido!"
+        }
+        return render(request,"proyecto_final/auth/login.html", contexto)
+
+    contexto = {
+        "title" : "Registrarme",
+        "form"  : RegistroUsuarioForm()
+    }
+    return render(request, "proyecto_final/auth/registro_usuario.html", contexto)

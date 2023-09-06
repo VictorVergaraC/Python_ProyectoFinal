@@ -8,6 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 TEMP_DIR = os.path.join(BASE_DIR, 'templates')
 
+
 ADDITIONAL_TEMPLATE = os.path.join(BASE_DIR, '../ProductosApp/templates/')
 
 # Quick-start development settings - unsuitable for production
@@ -50,12 +51,7 @@ ROOT_URLCONF = 'proyecto_final.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            # TEMP_DIR,
-            # ADDITIONAL_TEMPLATE
-            # os.path.join(BASE_DIR, 'ProductosApp', 'templates'),
-            # os.path.join(BASE_DIR, 'CarritoApp', 'templates'),
-        ],
+        'DIRS': [ os.path.join(BASE_DIR, 'proyecto_final', 'templates') ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -126,3 +122,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+LOGOUT_REDIRECT_URL = 'home_productos'
