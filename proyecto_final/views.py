@@ -28,12 +28,12 @@ def login_request(request):
                 products = False
 
             context = {
-                "title" : "Home",
+                "title"        : "Home",
                 "titleSection" : "Todos nuestros productos",
-                "msg" : message,
-                "mensaje": f"Usuario {username} logueado correctamente!",
-                "products": products,
-                "allProducts": allProducts
+                "msg"          : message,
+                "mensaje"      : f"Usuario {username} logueado correctamente!",
+                "products"     : products,
+                "allProducts"  : allProducts
             }
             if usuario is not None:
                 login(request, usuario)
@@ -41,16 +41,16 @@ def login_request(request):
 
             # else ...
             context = {
-                "form": AuthenticationForm(),
-                "title": "Login",
-                "msg": "Credenciales inválidas!"
+                "form"  : AuthenticationForm(),
+                "title" : "Login",
+                "msg"   : "Credenciales inválidas!"
             }
             return render(request, "proyecto_final/auth/login.html", context)
         # else ...
         context = {
-            "form": AuthenticationForm(),
-            "title": "Login",
-            "msg": "Datos inválidos!"
+            "form"  : AuthenticationForm(),
+            "title" : "Login",
+            "msg"   : "Datos inválidos!"
         }
         return render(request, "proyecto_final/auth/login.html", context)
 
@@ -58,9 +58,9 @@ def login_request(request):
     form = AuthenticationForm()
 
     context = {
-        "form": form,
-        "title": "Login",
-        "msg": ""
+        "form"  : form,
+        "title" : "Login",
+        "msg"   : ""
     }
 
     return render(request, "proyecto_final/auth/login.html", context)
@@ -113,19 +113,19 @@ def registrarme(request):
                 products = False
 
             contexto = {
-                "title" : "Home",
-                "titleSection" : "Todos nuestros productos",
-                "msg" : message,
-                "mensaje": f"Bienvenido {user}, creaste una cuenta y fuiste logueado!",
-                "products": products,
-                "allProducts": allProducts
+                "title"         : "Home",
+                "titleSection"  : "Todos nuestros productos",
+                "msg"           : message,
+                "mensaje"       : f"Bienvenido {user}, creaste una cuenta y fuiste logueado!",
+                "products"      : products,
+                "allProducts"   : allProducts
             }
 
             return render(request,"ProductosApp/productos/home/home_contenido.html", contexto)
         
         contexto = {
             "title" : "Login",
-            "form"  : AuthenticationForm(),
+            "form"  : RegistroUsuarioForm(),
             "msg"   : form.errors
         }
         return render(request, "proyecto_final/auth/registro_usuario.html", contexto)
