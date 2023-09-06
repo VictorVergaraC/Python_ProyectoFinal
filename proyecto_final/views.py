@@ -100,26 +100,35 @@ def mis_datos(request):
 def registrarme(request):
     
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = RegistroUsuarioForm(request.POST)
         if form.is_valid():
-            data = form.cleaned_data
+            user = form.save()
+            login(request, user)
 
-            username = data["username"]
-            form.save()
+            message = ""
+            allProducts = Producto.objects.all()[:10] # Con [:10] se agrega un límite de 10 registros
+            products    = True
+            if not allProducts:
+                message  = "No existen productos! :("
+                products = False
 
             contexto = {
-                "title" : "Login",
-                "form"  : AuthenticationForm(),
-                "msg"   : "Usuario creado correctamente! Ahora puedes iniciar sesión ..."
+                "title" : "Home",
+                "titleSection" : "Todos nuestros productos",
+                "msg" : message,
+                "mensaje": f"Bienvenido {user}, creaste una cuenta y fuiste logueado!",
+                "products": products,
+                "allProducts": allProducts
             }
-            return render(request,"proyecto_final/auth/login.html", contexto)
+
+            return render(request,"ProductosApp/productos/home/home_contenido.html", contexto)
         
         contexto = {
             "title" : "Login",
             "form"  : AuthenticationForm(),
-            "msg"   : "Formulario inválido!"
+            "msg"   : form.errors
         }
-        return render(request,"proyecto_final/auth/login.html", contexto)
+        return render(request, "proyecto_final/auth/registro_usuario.html", contexto)
 
     contexto = {
         "title" : "Registrarme",
