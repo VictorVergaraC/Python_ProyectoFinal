@@ -2,6 +2,13 @@ from django.shortcuts import render
 from django.db.models import Q
 from .models import *
 
+def imprime(descripcion, parametro):
+    print()
+    print()
+    print(descripcion, parametro)
+    print()
+    print()
+
 def home_productos(request):
     pageTitle   = "Bienvenido!"
     titleSection = "Todos nuestros productos"
@@ -9,6 +16,8 @@ def home_productos(request):
     message = ""
     allProducts = Producto.objects.all()[:10] # Con [:10] se agrega un límite de 10 registros
     
+    imprime("productos:", allProducts)
+
     products    = True
     if not allProducts:
         message  = "No existen productos! :("

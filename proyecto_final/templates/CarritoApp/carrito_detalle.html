@@ -7,34 +7,51 @@
 {% block content %}
 
 <main class="d-flex flex-column">
-
-    <aside class="d-flex">
-        <h4 class="ml-3">Productos que llevas</h4>
-    </aside>
-    <aside class="d-flex">
-        <table class="table mx-auto">
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Descripción</th>
-                    <th>Precio</th>
-                    <th>Cantidad</th>
-                    <th>Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in carrito_detalle %}
-                <tr>
-                    <td>{{ item.linea }}</td>
-                    <td>{{ item.id_producto.descripcion }}</td>
-                    <td>{{ item.precio }}</td>
-                    <td>{{ item.cantidad }}</td>
-                    <td>{{ item.subtotal }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </aside>
+    {% if carrito_detalle %}
+        <aside class="d-flex">
+            <h4 class="ml-3">Productos que llevas</h4>
+        </aside>
+        <aside class="d-flex flex-column">
+            <table class="table mx-auto">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Descripción Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in carrito_detalle %}
+                    <tr>
+                        <td>{{ item.linea }}</td>
+                        <td>{{ item.id_producto.descripcion }}</td>
+                        <td>${{ item.precio }}</td>
+                        <td>{{ item.cantidad }}</td>
+                        <td>${{ item.subtotal }}</td>
+                        <td class="d-flex gap-1 justify-content-center">
+                            <a href="{% url 'sumar_cantidad' item.id_carrito.id item.linea 'restar' %}" class="btn btn-warning"><i class="fa-solid fa-minus"></i></a>
+                            <a href="{% url 'sumar_cantidad' item.id_carrito.id item.linea 'agregar' %}" class="btn btn-success"><i class="fa-solid fa-plus"></i></a>
+                            <a href="{% url 'sumar_cantidad' item.id_carrito.id item.linea 'quitar' %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% if total %}
+            <p>Su pedido hasta el momento es de <strong>${{ total }}</strong></p>
+            {% endif %}
+            <h5 class="my-3">{{ mensaje }}</h5>
+        </aside>
+    {% else %}
+        <aside class="d-flex">
+            <div class="alert alert-danger mx-auto" role="alert">
+                Aún no haz agregado productos al carro!
+            </div>
+        </aside>
+    {% endif %}
 
 </main>
 

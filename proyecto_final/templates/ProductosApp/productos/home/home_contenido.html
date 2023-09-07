@@ -13,9 +13,9 @@
     <section class="d-flex card-deck mt-2">
         {% for producto in allProducts %}
         <div class="card mx-1 w-50">
-            <img class="card-img-top" src="..." alt="{{ producto.descripicion }}">
+            <img class="card-img-top" src="..." alt="{{ producto.descripcion }}">
             <div class="card-body">
-                <h5 class="card-title">{{ producto.descripicion }}</h5>
+                <h5 class="card-title">{{ producto.descripcion }}</h5>
                 <p class="card-text">${{ producto.precio }}</p>
                 <form action="{% url 'agregar_al_carro' producto.id %}" method="post">
                     {% csrf_token %}
