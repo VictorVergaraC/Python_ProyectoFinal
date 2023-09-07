@@ -140,8 +140,84 @@ def agregar_producto(request, id):
 
 
 def modificar_cantidad(request, id, linea, accion):
+    usuario = request.user
+    cliente = User.objects.get(username = usuario)
+    cliente = User.objects.filter(username=usuario).first()
+        
+    carrito = Carrito.objects.filter(id = int(id), cliente = cliente).first()
+    detalle = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente) 
 
-    pass
+    linea_detalle  = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente, linea = int(linea)).first()
+
+    producto = Producto.objects.filter(id = linea_detalle.id_producto.id).first()
+    
+    locale.setlocale(locale.LC_ALL, 'es_CL')
+
+    if accion == "restar":
+
+        if linea_detalle.cantidad > 1:
+            carrito.total -= producto.precio
+            carrito.save()
+
+            linea_detalle.cantidad -= 1
+            linea_detalle.subtotal -= producto.precio
+            linea_detalle.save()
+
+
+            contexto = {
+                "Title"           : "Carrito de Compras",
+                "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),
+                "mensaje"         : "Cantidad actualizada! Hemos quitado una unidad",
+                "total"           : locale.format_string("%d", carrito.total, grouping=True),
+                "id_carrito"      : carrito.id
+            }
+
+            return render(request, "CarritoApp/carrito_detalle.html", contexto)
+        
+        contexto = {
+                "Title"           : "Carrito de Compras",
+                "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),
+                "mensaje"         : "Ya lleva la cantidad mínima, si quiere quitar el producto, por favor click en su respectivo botón!",
+                "total"           : locale.format_string("%d", carrito.total, grouping=True),
+                "id_carrito"      : carrito.id
+        }
+        return render(request, "CarritoApp/carrito_detalle.html", contexto)
+
+    elif accion == "agregar":
+        carrito.total += producto.precio
+        carrito.save()
+
+        linea_detalle.cantidad += 1
+        linea_detalle.subtotal += producto.precio
+        linea_detalle.save()
+        
+        contexto = {
+                "Title"           : "Carrito de Compras",
+                "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),
+                "mensaje"         : "Cantidad actualizada! Hemos agregado una cantidad",
+                "total"           : locale.format_string("%d", carrito.total, grouping=True),
+                "id_carrito"      : carrito.id
+        }
+
+        return render(request, "CarritoApp/carrito_detalle.html", contexto)
+
+    elif accion == "quitar": # quitar
+
+
+        pass
+
+    else:
+        contexto = {
+                "Title"           : "Carrito de Compras",
+                "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),
+                "mensaje"         : "Acción inválida!",
+                "total"           : locale.format_string("%d", carrito.total, grouping=True),
+                "id_carrito"      : carrito.id
+        }
+
+        return render(request, "CarritoApp/carrito_detalle.html", contexto)
+        
+
 
 def imprime(descripcion, parametro):
     print()

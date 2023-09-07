@@ -32,9 +32,9 @@
                         <td>{{ item.cantidad }}</td>
                         <td>${{ item.subtotal }}</td>
                         <td class="d-flex gap-1 justify-content-center">
-                            <a href="{% url 'sumar_cantidad' item.id_carrito.id item.linea 'restar' %}" class="btn btn-warning"><i class="fa-solid fa-minus"></i></a>
-                            <a href="{% url 'sumar_cantidad' item.id_carrito.id item.linea 'agregar' %}" class="btn btn-success"><i class="fa-solid fa-plus"></i></a>
-                            <a href="{% url 'sumar_cantidad' item.id_carrito.id item.linea 'quitar' %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                            <a href="{% url 'sumar_cantidad' item.id_carrito.id item.linea 'restar' %} " class="btn btn-warning"><i class="fa-solid fa-minus"></i></a>
+                            <a href="{% url 'sumar_cantidad' item.id_carrito.id item.linea 'agregar' %}" class="btn btn-success"><i class="fa-solid fa-plus" ></i></a>
+                            <a href="{% url 'sumar_cantidad' item.id_carrito.id item.linea 'quitar' %} " class="btn btn-danger" ><i class="fa-solid fa-trash"></i></a>
                         </td>
                     </tr>
                     {% endfor %}
