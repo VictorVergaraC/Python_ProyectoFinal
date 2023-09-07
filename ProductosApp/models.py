@@ -1,7 +1,7 @@
 from django.db import models
 
 class Producto(models.Model):
-    descripicion   = models.CharField(max_length=50)
+    descripcion   = models.CharField(max_length=50)
     categoria     = models.CharField(max_length=50)
     precio        = models.IntegerField()
     oferta        = models.BooleanField()
@@ -9,7 +9,7 @@ class Producto(models.Model):
     activo        = models.BooleanField()
 
     def __str__(self):
-        return f"Producto: {self.descripicion}"
+        return f"Producto: {self.descripcion}"
 
 class Categoria(models.Model):
     descripcion = models.CharField(max_length=50)

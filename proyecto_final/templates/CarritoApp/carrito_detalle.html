@@ -1,0 +1,41 @@
+{% extends "proyecto_final/home.html" %}
+
+{% load static %}
+
+{% block title_page %} {{ title }} {% endblock %}
+
+{% block content %}
+
+<main class="d-flex flex-column">
+
+    <aside class="d-flex">
+        <h4 class="ml-3">Productos que llevas</h4>
+    </aside>
+    <aside class="d-flex">
+        <table class="table mx-auto">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in carrito_detalle %}
+                <tr>
+                    <td>{{ item.linea }}</td>
+                    <td>{{ item.id_producto.descripcion }}</td>
+                    <td>{{ item.precio }}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>{{ item.subtotal }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </aside>
+
+</main>
+
+{% endblock %}
