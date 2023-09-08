@@ -16,8 +16,6 @@ def home_productos(request):
     message = ""
     allProducts = Producto.objects.all()[:10] # Con [:10] se agrega un límite de 10 registros
     
-    imprime("productos:", allProducts)
-
     products    = True
     if not allProducts:
         message  = "No existen productos! :("

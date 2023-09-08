@@ -3,6 +3,7 @@ from django.contrib.auth.views import LogoutView
 from django.urls import path, include
 from ProductosApp.views import *
 from CarritoApp.views import *
+from CompraApp.views import *
 from .views import *
 
 from django.conf import settings
@@ -19,6 +20,7 @@ urlpatterns = [
 
     path('productos/', include("ProductosApp.urls")),
     path('carrito/', include("CarritoApp.urls")),
+    path('compras/', include("CompraApp.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

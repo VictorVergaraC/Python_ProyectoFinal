@@ -16,7 +16,7 @@ class Categoria(models.Model):
     activa      = models.BooleanField()
 
     def __str__(self):
-        return f"Producto: {self.descripcion}"
+        return f"Categoría: {self.descripcion}"
     
 class ProductoImg(models.Model):
     imagen   = models.ImageField(upload_to="products")

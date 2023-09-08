@@ -234,7 +234,13 @@ def modificar_cantidad(request, id, linea, accion):
         
 
 def pre_finalizar_pedido(request):
+    usuario = request.user
+    cliente = User.objects.filter(username=usuario).first()
+        
+    carrito = Carrito.objects.filter(cliente = cliente).first()
+    detalle = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente)
 
+    
     pass
 
 def imprime(descripcion, parametro):
