@@ -15,6 +15,7 @@ urlpatterns = [
     path('login/', login_request, name="login" ),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('usuario/misdatos/', mis_datos, name="mis_datos" ),
+    path('usuario/miscompras/', mis_compras, name="mis_compras" ),
 
     path('productos/', include("ProductosApp.urls")),
     path('carrito/', include("CarritoApp.urls")),

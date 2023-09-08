@@ -175,7 +175,7 @@ def modificar_cantidad(request, id, linea, accion):
             return render(request, "CarritoApp/carrito_detalle.html", contexto)
         
         contexto = {
-                "Title"           : "Carrito de Compras",
+                "title"           : "Carrito de Compras",
                 "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),
                 "mensaje"         : "Ya lleva la cantidad mínima, si quiere quitar el producto, por favor click en su respectivo botón!",
                 "total"           : locale.format_string("%d", carrito.total, grouping=True),
@@ -192,9 +192,9 @@ def modificar_cantidad(request, id, linea, accion):
         linea_detalle.save()
         
         contexto = {
-                "Title"           : "Carrito de Compras",
+                "title"           : "Carrito de Compras",
                 "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),
-                "mensaje"         : "Cantidad actualizada! Hemos agregado una cantidad",
+                "mensaje"         : "Cantidad actualizada! Hemos agregado una unidad",
                 "total"           : locale.format_string("%d", carrito.total, grouping=True),
                 "id_carrito"      : carrito.id
         }
@@ -202,13 +202,28 @@ def modificar_cantidad(request, id, linea, accion):
         return render(request, "CarritoApp/carrito_detalle.html", contexto)
 
     elif accion == "quitar": # quitar
+        mensaje = "Producto eliminado!"
+        carrito.total -= linea_detalle.subtotal
+        carrito.save()
+        
+        if carrito.total == 0:
+            mensaje += " Ha removido todos los productos del carrito..."
 
+        linea_detalle.delete()
 
-        pass
+        contexto = {
+                "title"           : "Carrito de Compras",
+                "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),
+                "mensaje"         : mensaje,
+                "total"           : locale.format_string("%d", carrito.total, grouping=True),
+                "id_carrito"      : carrito.id
+        }
+
+        return render(request, "CarritoApp/carrito_detalle.html", contexto)
 
     else:
         contexto = {
-                "Title"           : "Carrito de Compras",
+                "title"           : "Carrito de Compras",
                 "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),
                 "mensaje"         : "Acción inválida!",
                 "total"           : locale.format_string("%d", carrito.total, grouping=True),
@@ -218,6 +233,9 @@ def modificar_cantidad(request, id, linea, accion):
         return render(request, "CarritoApp/carrito_detalle.html", contexto)
         
 
+def pre_finalizar_pedido(request):
+
+    pass
 
 def imprime(descripcion, parametro):
     print()

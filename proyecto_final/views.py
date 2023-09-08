@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from ProductosApp.views import home_productos
 from ProductosApp.models import *
+from CompraApp.models import *
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from .forms import *
+from .models import *
 
 from django.contrib.auth.decorators import login_required # para vistas basadas en funciones
 
@@ -135,3 +137,24 @@ def registrarme(request):
         "form"  : RegistroUsuarioForm()
     }
     return render(request, "proyecto_final/auth/registro_usuario.html", contexto)
+
+@login_required
+def mis_compras(request):
+    usuario = request.user
+    cliente = User.objects.filter(username=usuario).first()
+
+    compras = Compra.objects.filter(cliente = cliente).values('id','total','fecha')
+
+    print()
+    print()
+    print("compras:", compras)
+    print()
+    print()
+
+
+    contexto = {
+        "title" : "Mis Compras",
+        "compras" : compras
+    }
+
+    return render(request, "ComprasApp/mis_compras.html", contexto)

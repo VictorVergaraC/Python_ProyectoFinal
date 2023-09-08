@@ -1,0 +1,43 @@
+{% extends "proyecto_final/home.html" %}
+
+{% load static %}
+
+{% block title_page %} {{ title }} {% endblock %}
+
+{% block content %}
+
+<main class="d-flex flex-column">
+    <h4 class="my-2">Mis Compras</h4>
+    <aside class="d-flex justify-content-center align-items-center my-2">
+        {% if compras %}
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Monto</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in compras %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.total }}</td>
+                        <td>{{ item.fecha }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+
+        <div class="alert alert-danger mx-auto mt-5" role="alert">
+            Aún no haz realizado ningún pedido!
+        </div>
+
+        {% endif %}
+    </aside>
+</main>
+
+{% endblock %}
