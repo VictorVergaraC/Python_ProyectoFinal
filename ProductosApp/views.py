@@ -133,3 +133,36 @@ def todos(request):
     return render(request,
                   "ProductosApp/productos/home/home_contenido.html",
                   context)
+
+def comentario(request, id):
+    usuario = request.user
+    cliente, created = User.objects.get_or_create(username=usuario)
+
+    producto = Producto.objects.filter(id=id).first()
+
+    if request.method == "POST":
+
+        descripcion = request.POST["descripcion"].capitalize()
+
+        new_comentario = ComentarioProducto(
+            descripcion = descripcion,
+            id_producto = producto,
+            cliente     = cliente,
+            fecha       = timezone.now().date())
+        new_comentario.save()
+
+        contexto = {
+            "title"       : "Agregar Comentario",
+            "comentarios" : ComentarioProducto.objects.filter(id_producto=producto).order_by('-fecha').select_related('id_producto'),
+            "mensaje"     : "Comentario Agregado!",
+            "producto"    : producto
+        }
+        return render(request, "ProductosApp/productos/comentario/comentario.html", contexto)
+
+    
+    contexto = {
+        "title"       : "Agregar Comentario",
+        "comentarios" : ComentarioProducto.objects.filter(id_producto=producto).order_by('-fecha').select_related('id_producto','cliente'),
+        "producto"    : producto
+    }
+    return render(request, "ProductosApp/productos/comentario/comentario.html", contexto)

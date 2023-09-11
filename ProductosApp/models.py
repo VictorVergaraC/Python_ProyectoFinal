@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
+from django.utils import timezone
 
 class Categoria(models.Model):
     descripcion = models.CharField(max_length=50)
@@ -22,15 +24,16 @@ class Producto(models.Model):
     
 class ProductoImg(models.Model):
     imagen   = models.ImageField(upload_to="products")
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True, blank=True)
+    id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f"Producto: {self.producto}"
     
 class ComentarioProducto(models.Model):
-    descripcion   = models.CharField(max_length=100)
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True, blank=True)
-    cliente   = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    descripcion = models.CharField(max_length=100)
+    id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True, blank=True)
+    cliente     = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    fecha       = models.DateField()
     
     def __str__(self):
-        return f"{self.cliente.first_name} acerca de '{self.producto.descripcion}' dice: {self.descripcion}"
+        return f"{self.cliente.first_name} ({self.fecha.strftime('%d/%m/%Y')}) acerca de '{self.producto.descripcion}' dice: {self.descripcion}"

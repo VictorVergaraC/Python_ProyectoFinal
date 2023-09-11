@@ -1,0 +1,57 @@
+{% extends "proyecto_final/home.html" %}
+
+{% load static %}
+
+{% block title_page %} {{ title }} {% endblock %}
+
+{% block content %}
+
+<main class="d-flex justify-content-around align-items center">
+
+    <aside class="d-flex flex-column">
+        <h4 class="my-2">{{ producto.descripcion }}</h4>
+        <!-- PRODUCTO AQUÍ -->
+        <img src="..." alt="{{ producto.descripcion }}">
+    </aside>
+
+    <aside class="d-flex flex-column">
+        <article class="my-2">
+            {% if comentarios %}
+                <div class="p-4 border border-light rounded" style="max-height: 250px; overflow-y: auto;">
+                    {% for item in comentarios %}
+    
+                        <div class="card my-1" style="height: 120px;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ item.cliente.username }}</h5>
+                                <p class="card-text">{{ item.descripcion }}</p>
+                                <p class="card-text"><small class="text-muted">{{ item.fecha }}</small></p>
+                            </div>
+                        </div>
+    
+                    {% endfor %}
+                </div>
+
+            {% else %}
+
+            <div class="alert alert-warning mx-auto" role="alert">
+                Aún no existen comentarios sobre el producto... Sé el primero!
+            </div>
+
+            {% endif %}
+        </article>
+        <article class="my-2">
+            <form action="{% url 'comentar_producto' producto.id %}" method="post">
+                {% csrf_token %}
+                <div class="form-group my-2">
+                    <label for="descripcion">Coméntanos!</label>
+                    <textarea class="form-control" name="descripcion" id="descripcion" cols="70" rows="5"
+                        placeholder="Escríbenos tu opinión ..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-success btn-sm my-2">Agregar</button>
+            </form>
+        </article>
+    </aside>
+
+</main>
+
+{% endblock %}
