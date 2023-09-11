@@ -232,16 +232,27 @@ def modificar_cantidad(request, id, linea, accion):
 
         return render(request, "CarritoApp/carrito_detalle.html", contexto)
         
-
+@login_required
 def pre_finalizar_pedido(request):
     usuario = request.user
     cliente = User.objects.filter(username=usuario).first()
-        
+
+    if request.method == "POST":
+        pass
+    # else:
+
     carrito = Carrito.objects.filter(cliente = cliente).first()
     detalle = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente)
 
+    contexto = {
+        "title"           : "Confirmar Compra",
+        "carrito_detalle" : detalle,
+        "usuario"         : cliente.first_name,
+        "total"           : locale.format_string("%d", carrito.total, grouping=True)
+    }
+
+    return render(request, "CarritoApp/pre_finalizar.html", contexto)
     
-    pass
 
 def imprime(descripcion, parametro):
     print()

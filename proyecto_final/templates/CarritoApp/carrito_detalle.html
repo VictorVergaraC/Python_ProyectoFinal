@@ -41,7 +41,7 @@
             </tbody>
         </table>
         {% if total %}
-        <p>Su pedido hasta el momento es de <strong>${{ total }}</strong>, para finalizar su pedido <span><a href="#" class="text-decoration-none"><strong>click aquí</strong></a></span> </p>
+        <p>Su pedido hasta el momento es de <strong>${{ total }}</strong>, para finalizar su pedido <span><a href="{% url 'pre_finalizar_pedido' %}" class="text-decoration-none"><strong>click aquí</strong></a></span> </p>
         {% endif %}
     </aside>
     {% else %}

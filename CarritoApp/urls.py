@@ -9,5 +9,5 @@ urlpatterns = [
     path('', carrito, name='carrito'),
     path('agregar_al_carro/<id>', agregar_producto, name='agregar_al_carro'),
     path('modificar_cantidad/<id>/<linea>/<str:accion>/', modificar_cantidad, name='sumar_cantidad'),
-
+    path('finalizar', pre_finalizar_pedido, name='pre_finalizar_pedido'),
 ]

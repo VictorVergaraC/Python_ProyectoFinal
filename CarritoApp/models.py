@@ -16,4 +16,7 @@ class CarritoDetalle(models.Model):
     cantidad    = models.IntegerField(default=1)
     subtotal    = models.IntegerField(default=0)
 
-    pass
+    def __str__(self):
+        descripcion_producto = self.id_producto.descripcion if self.id_producto else "Producto Desconocido"
+
+        return f"ID Producto: {self.id_producto.id}, Descripción: {descripcion_producto}, Precio: {self.precio}, Cantidad: {self.cantidad}, Subtotal: {self.subtotal}"

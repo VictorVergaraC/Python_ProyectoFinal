@@ -6,8 +6,51 @@
 
 {% block content %}
 
-<main class="d-flex">
+<main class="d-flex justify-content-center">
+
+    <aside class="mx-4">
+        <main class="d-flex flex-column">
+            <h4 class="mb-2">Formulario de Pago</h4>
+            <form action="#" method="post">
+                {% csrf_token %}
+
+
+                <input type="submit" value="Realizar Compra" class="btn btn-success btn-sm mt-2 mx-auto">
+            </form>
+        </main>
+    </aside>
+    <aside class="mx-4">
+        <main class="d-flex flex-column">
+            <h4 class="mb-2">Productos que llevas</h4>
+
+            <table class="table mx-auto">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in carrito_detalle %}
+                    <tr>
+                        <td>{{ item.linea }}</td>
+                        <td>{{ item.id_producto.descripcion }}</td>
+                        <td>${{ item.precio }}</td>
+                        <td>{{ item.cantidad }}</td>
+                        <td>${{ item.subtotal }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- {% if total %}
+            <p>Su pedido hasta el momento es de <strong>${{ total }}</strong>, para finalizar su pedido <span><a href="#" class="text-decoration-none"><strong>click aquí</strong></a></span> </p>
+            {% endif %} -->
+        </main>
+    </aside>
     
 </main>
 
-{& endblock &}
+{% endblock %}
