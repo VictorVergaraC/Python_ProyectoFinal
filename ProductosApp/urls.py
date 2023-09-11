@@ -10,4 +10,5 @@ urlpatterns = [
     path('otros/', otros, name="productos_otros"),
     path('todos/', todos, name="productos_todos"),
     path('comentar/<id>/', comentario, name="comentar_producto"),
+    path('administrar/', administrar_productos, name="administrar_productos"),
 ]

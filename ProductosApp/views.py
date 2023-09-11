@@ -1,6 +1,14 @@
-from django.shortcuts import render
-from django.db.models import Q
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
+from django.db.models import Q
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from ProductosApp.models import Producto
+from CompraApp.models import Compra, CompraDetalle
+from django.contrib.auth.decorators import login_required # para vistas basadas en funciones
+import locale
+from datetime import datetime
+from django.utils import timezone
 
 def imprime(descripcion, parametro):
     print()
@@ -166,3 +174,13 @@ def comentario(request, id):
         "producto"    : producto
     }
     return render(request, "ProductosApp/productos/comentario/comentario.html", contexto)
+
+@login_required
+def administrar_productos(request):
+
+
+    contexto = {
+        "title" : "Administrar Productos",
+        "productos" : Producto.objects.all().select_related('categoria')
+    }
+    return render(request, "ProductosApp/admin/listado_productos.html", contexto)

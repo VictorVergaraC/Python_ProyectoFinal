@@ -145,13 +145,6 @@ def mis_compras(request):
 
     compras = Compra.objects.filter(cliente = cliente).values('id','total','fecha')
 
-    print()
-    print()
-    print("compras:", compras)
-    print()
-    print()
-
-
     contexto = {
         "title" : "Mis Compras",
         "compras" : compras
