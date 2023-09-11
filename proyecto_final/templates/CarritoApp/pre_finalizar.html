@@ -8,18 +8,29 @@
 
 <main class="d-flex justify-content-center">
 
-    <aside class="mx-4">
+    <aside class="mx-4" style="width: 50%;">
         <main class="d-flex flex-column">
             <h4 class="mb-2">Formulario de Pago</h4>
-            <form action="#" method="post">
+            <form action="{% url 'pre_finalizar_pedido' %}" method="post" id="formFinalizar">
                 {% csrf_token %}
-
-
+                
+                <div class="form-group my-2">
+                    <label for="ciudad">Ciudad</label>
+                    <input name="ciudad" type="text" class="form-control" placeholder="Ingresa tu ciudad ..." required>
+                </div>
+                <div class="form-group my-2">
+                    <label for="direccion">Dirección</label>
+                    <input name="direccion" type="text" class="form-control" placeholder="Ingresa tu dirección ... Ej: Mi Calle, #123" required>
+                </div>
+                <div class="form-group my-2">
+                    <label for="contacto">Contacto</label>
+                    <input name="contacto" type="text" class="form-control" oninput="formatPhoneNumber(this)" placeholder="Ingresa tu número de contacto ... Ej: +56 987654321" required>
+                </div>
                 <input type="submit" value="Realizar Compra" class="btn btn-success btn-sm mt-2 mx-auto">
             </form>
         </main>
     </aside>
-    <aside class="mx-4">
+    <aside class="mx-4" style="width: 50%;">
         <main class="d-flex flex-column">
             <h4 class="mb-2">Productos que llevas</h4>
 
@@ -45,9 +56,9 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <!-- {% if total %}
-            <p>Su pedido hasta el momento es de <strong>${{ total }}</strong>, para finalizar su pedido <span><a href="#" class="text-decoration-none"><strong>click aquí</strong></a></span> </p>
-            {% endif %} -->
+            {% if total %}
+            <p>Su pedido es de <strong>${{ total }}</strong>. </p>
+            {% endif %}
         </main>
     </aside>
     

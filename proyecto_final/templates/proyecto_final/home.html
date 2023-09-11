@@ -92,6 +92,25 @@
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
         crossorigin="anonymous"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        function formatPhoneNumber(input) {
+            
+            let numero = input.value;
+
+            numero = numero.replace(/[^0-9+]/g, '');
+
+            if (numero.length > 3 && numero.charAt(3) !== ' ') {
+                numero = numero.substring(0, 3) + ' ' + numero.substring(3);
+            }
+
+            if (numero.length > 13) {
+                numero = numero.substring(0, 13);
+            }
+
+            input.value = numero;
+        }
+
+    </script>
 </body>
 
 </html>

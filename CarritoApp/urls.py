@@ -5,6 +5,9 @@ from django.template import Template, Context, loader
 
 from .views import *
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('', carrito, name='carrito'),
     path('agregar_al_carro/<id>', agregar_producto, name='agregar_al_carro'),

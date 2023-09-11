@@ -3,8 +3,11 @@ from .models import *
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from ProductosApp.models import Producto
+from CompraApp.models import Compra, CompraDetalle
 from django.contrib.auth.decorators import login_required # para vistas basadas en funciones
 import locale
+from datetime import datetime
+from django.utils import timezone
 
 @login_required
 def carrito(request):
@@ -236,14 +239,58 @@ def modificar_cantidad(request, id, linea, accion):
 def pre_finalizar_pedido(request):
     usuario = request.user
     cliente = User.objects.filter(username=usuario).first()
-
-    if request.method == "POST":
-        pass
-    # else:
-
     carrito = Carrito.objects.filter(cliente = cliente).first()
     detalle = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente)
 
+    locale.setlocale(locale.LC_ALL, 'es_CL')
+
+    if request.method == "POST":
+        ciudad    = request.POST["ciudad"].title()
+        direccion = request.POST["direccion"].title()
+        contacto  = request.POST["contacto"]
+        
+        linea = 1
+
+        new_compra = Compra(
+            cliente   = cliente,
+            total     = carrito.total,
+            ciudad    = ciudad,
+            direccion = direccion, 
+            contacto  = contacto, 
+            fecha     = timezone.now().date())
+        new_compra.save()
+
+        for item in detalle:
+            new_detalle = CompraDetalle(
+                id_compra   = new_compra,
+                linea       = linea,
+                # id_producto = item.id_producto,
+                id_producto = get_object_or_404(Producto, id=item.id_producto.id),
+                precio      = item.precio,
+                cantidad    = item.cantidad,
+                subtotal    = item.subtotal
+            )
+            new_detalle.save()
+            linea += 1
+
+        carrito.delete()
+        detalle.delete()
+
+        compra = Compra.objects.filter(cliente=cliente).values('cliente','total','ciudad','direccion','contacto', 'fecha').order_by('-fecha').first()
+
+        compra_detalle = CompraDetalle.objects.filter(id_compra = new_compra).select_related('id_producto') # .values('linea','id_producto','precio','cantidad','subtotal')
+       
+        
+        contexto = {
+            "title"   : "Compra Finalizada",
+            "total"   : locale.format_string("%d", new_compra.total, grouping=True),
+            "usuario" : usuario,
+            "detalle" : compra_detalle,
+            "fecha"   : new_compra.fecha.strftime('%d/%m/%Y')
+        }
+
+        return render(request, "CarritoApp/finalizar.html", contexto)
+    
     contexto = {
         "title"           : "Confirmar Compra",
         "carrito_detalle" : detalle,

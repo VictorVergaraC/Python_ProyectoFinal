@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Categoria(models.Model):
     descripcion = models.CharField(max_length=50)
@@ -25,3 +26,11 @@ class ProductoImg(models.Model):
 
     def __str__(self):
         return f"Producto: {self.producto}"
+    
+class ComentarioProducto(models.Model):
+    descripcion   = models.CharField(max_length=100)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True, blank=True)
+    cliente   = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    
+    def __str__(self):
+        return f"{self.cliente.first_name} acerca de '{self.producto.descripcion}' dice: {self.descripcion}"

@@ -13,15 +13,24 @@
     <section class="d-flex card-deck mt-2">
         {% for producto in allProducts %}
         <div class="card mx-1 w-50">
-            <img class="card-img-top" src="..." alt="{{ producto.descripcion }}">
+            <img class="card-img-top" src="" alt="{{ producto.descripcion }}">
             <div class="card-body">
                 <h5 class="card-title">{{ producto.descripcion }}</h5>
                 <p class="card-text">${{ producto.precio }}</p>
-                <form action="{% url 'agregar_al_carro' producto.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="redirect" id="redirect" value="{{ redirect }}">
-                    <button class="btn btn-success" type="submit"><i class="fa-solid fa-cart-shopping"></i> Agregar</button>
-                </form>
+                <div class="d-flex">
+                    <form action="{% url 'agregar_al_carro' producto.id %}" method="post" class="mx-1">
+                        {% csrf_token %}
+                        <input type="hidden" name="redirect" id="redirect" value="{{ redirect }}">
+                        <button class="btn btn-success btn-sm" type="submit"><i class="fa-solid fa-cart-shopping"></i> Agregar</button>
+                    </form>
+                    <form action="#" method="post" class="mx-1">
+                        {% csrf_token %}
+                        <input type="hidden" name="redirect" id="redirect" value="{{ redirect }}">
+                        <!-- <button class="btn btn-warning btn-sm" type="submit"><i class="fa-regular fa-comment"></i> Comentar</button> -->
+                        <a href="#" class="btn btn-warning btn-sm"><i class="fa-regular fa-comment"></i> Comentar</a>
+                    </form>
+                </div>
+                <!-- <i class="fa-regular fa-comment"></i> -->
                 <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
             </div>
         </div>

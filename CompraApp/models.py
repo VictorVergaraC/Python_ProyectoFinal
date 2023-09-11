@@ -9,7 +9,7 @@ class Compra(models.Model):
     total     = models.IntegerField()
     ciudad    = models.CharField(max_length=50, null=True)
     direccion = models.CharField(max_length=150, null=True)
-    contacto  = models.IntegerField()
+    contacto  = models.CharField(max_length=15, null=True)
     fecha     = models.DateField()
 
     def __str__(self):
@@ -22,6 +22,7 @@ class Compra(models.Model):
     
 class CompraDetalle(models.Model):
     id_compra   = models.ForeignKey(Compra, on_delete=models.CASCADE, null=True, blank=True)
+    linea       = models.IntegerField(default=1)
     id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True, blank=True)
     precio      = models.IntegerField()
     cantidad    = models.IntegerField()

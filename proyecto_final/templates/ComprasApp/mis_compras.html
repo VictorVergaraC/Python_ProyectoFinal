@@ -6,25 +6,29 @@
 
 {% block content %}
 
-<main class="d-flex flex-column">
+<main class="d-flex flex-column mx-5">
     <h4 class="my-2">Mis Compras</h4>
     <aside class="d-flex justify-content-center align-items-center my-2">
         {% if compras %}
 
-        <table class="table">
+        <table class="table table-sm">
             <thead>
                 <tr>
                     <th>Número</th>
                     <th>Monto</th>
-                    <th>Total</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in compras %}
                     <tr>
                         <td>{{ item.id }}</td>
-                        <td>{{ item.total }}</td>
+                        <td>${{ item.total }}</td>
                         <td>{{ item.fecha }}</td>
+                        <td>
+                            <a href="#" class="btn btn-success btn-sm"><i class="fa-solid fa-magnifying-glass"></i></a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
