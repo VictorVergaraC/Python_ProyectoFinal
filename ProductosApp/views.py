@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required # para vistas basadas 
 import locale
 from datetime import datetime
 from django.utils import timezone
+from django.core.files.storage import FileSystemStorage
 
 def imprime(descripcion, parametro):
     print()
@@ -177,10 +178,115 @@ def comentario(request, id):
 
 @login_required
 def administrar_productos(request):
+    usuario = request.user
+    usuario = User.objects.get(username=usuario)
 
+    if not usuario.is_superuser:
+        return redirect('home_productos')
 
     contexto = {
         "title" : "Administrar Productos",
         "productos" : Producto.objects.all().select_related('categoria')
     }
     return render(request, "ProductosApp/admin/listado_productos.html", contexto)
+
+@login_required
+def editar_producto(request, id):
+    usuario = request.user
+    usuario = User.objects.get(username=usuario)
+
+    if not usuario.is_superuser:
+        return redirect('home_productos')
+
+    producto   = Producto.objects.filter(id = id).select_related('categoria').first()
+    categorias = Categoria.objects.all()
+
+    if request.method == "POST":
+
+        imagen       = request.FILES['imagen']
+        descripcion  = request.POST['descripcion']
+        id_categoria = request.POST['categoria']
+        precio       = request.POST['precio']
+
+        # Validaciones ...
+        if int(precio) <= 0:
+            img_temp = ProductoImg.objects.filter(id_producto = producto).first()
+            contexto = {
+                "title"      : f"Editar: {producto.descripcion}",
+                "producto"   : producto,
+                "categorias" : categorias,
+                "img"        : img_temp if img_temp else "/media/products/default.png",
+                "mensaje"    : "El precio no puede ser menor o igual a 0!"
+            }
+            return render(request, "ProductosApp/admin/editar_producto.html", contexto)
+        
+        if descripcion == '' or len(descripcion) <= 4:
+            img_temp = ProductoImg.objects.filter(id_producto = producto).first()
+            contexto = {
+                "title"      : f"Editar: {producto.descripcion}",
+                "producto"   : producto,
+                "categorias" : categorias,
+                "img"        : img_temp if img_temp else "/media/products/default.png",
+                "mensaje"    : "Descripción muy corta!"
+            }
+            return render(request, "ProductosApp/admin/editar_producto.html", contexto)
+        
+        if not Categoria.objects.filter(id = id_categoria).first():
+            img_temp = ProductoImg.objects.filter(id_producto = producto).first()
+            contexto = {
+                "title"      : f"Editar: {producto.descripcion}",
+                "producto"   : producto,
+                "categorias" : categorias,
+                "img"        : img_temp if img_temp else "/media/products/default.png",
+                "mensaje"    : "La categoría no existe!"
+            }
+            return render(request, "ProductosApp/admin/editar_producto.html", contexto)
+        
+        # Fin de validaciones ...
+
+        categoria_producto   = Categoria.objects.filter(id = id_categoria).first()
+        producto.descripcion = descripcion.upper()
+        producto.categoria   = categoria_producto
+        producto.precio      = int(precio)
+        producto.save()
+
+        msg_producto = "Producto actualizado!"
+        msg_imagen   = ""
+
+        img = ProductoImg.objects.filter(id_producto = producto).first()
+        if img:
+            img.imagen = imagen
+            img.save()
+            msg_imagen = "Imagen actualizada!"
+        else:
+            new_img = ProductoImg(imagen = imagen, id_producto = producto)
+            new_img.save()
+            msg_imagen = "Imagen agregada!"
+        
+        contexto = {
+            "title"      : f"Editar: {producto.descripcion}",
+            "producto"   : producto,
+            "categorias" : categorias,
+            
+        }
+
+    imagen = ProductoImg.objects.filter(id_producto = producto).first()
+
+    if not imagen:
+        imagen = "/media/products/default.png"
+
+    contexto = {
+        "title"      : f"Editar: {producto.descripcion}",
+        "producto"   : producto,
+        "categorias" : categorias,
+        "img"        : imagen
+    }
+
+    return render(request, "ProductosApp/admin/editar_producto.html", contexto)
+
+def GetImagen(id):
+    img = ProductoImg.objects.filter(id = id)
+    if len(img) != 0:
+        return img[0].imagen.url
+    
+    return "/media/products/default.png"

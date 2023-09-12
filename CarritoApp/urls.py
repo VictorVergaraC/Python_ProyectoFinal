@@ -14,3 +14,5 @@ urlpatterns = [
     path('modificar_cantidad/<id>/<linea>/<str:accion>/', modificar_cantidad, name='sumar_cantidad'),
     path('finalizar', pre_finalizar_pedido, name='pre_finalizar_pedido'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

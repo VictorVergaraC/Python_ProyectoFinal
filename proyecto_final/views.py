@@ -56,7 +56,7 @@ def login_request(request):
         }
         return render(request, "proyecto_final/auth/login.html", context)
 
-    # else
+    # else ...
     form = AuthenticationForm()
 
     context = {

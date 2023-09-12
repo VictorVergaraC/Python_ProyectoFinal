@@ -27,7 +27,7 @@ class ProductoImg(models.Model):
     id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return f"Producto: {self.producto}"
+        return f"Producto: {self.id_producto.descripcion}"
     
 class ComentarioProducto(models.Model):
     descripcion = models.CharField(max_length=100)
