@@ -15,6 +15,7 @@
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Producto</th>
                 <th>Descripción</th>
                 <th>Categoría</th>
                 <th>Precio</th>
@@ -24,12 +25,17 @@
         <tbody>
             {% for item in productos %}
             <tr>
-                <td>{{ item.id }}</td>
-                <td>{{ item.descripcion }}</td>
-                <td>{{ item.categoria.descripcion }}</td>
-                <td>${{ item.precio }}</td>
+                <td>{{ item.producto.id }}</td>
+                <td>
+                    <a href="{% url 'comentar_producto' item.producto.id %}">
+                        <img src="{{ item.img.url }}" alt="{{ item.producto.descripcion }}" class="mx-auto" style="width: 50px;">
+                    </a>
+                </td>
+                <td>{{ item.producto.descripcion }}</td>
+                <td>{{ item.producto.categoria.descripcion }}</td>
+                <td>${{ item.producto.precio }}</td>
                 <td class="d-flex">
-                    <a href="{% url 'editar_producto' item.id %}" class="btn btn-success btn-sm mx-1"><i class="fa-regular fa-pen-to-square"></i></a>
+                    <a href="{% url 'editar_producto' item.producto.id %}" class="btn btn-success btn-sm mx-1"><i class="fa-regular fa-pen-to-square"></i></a>
                     <a href="#" class="btn btn-danger btn-sm mx-1"><i class="fa-regular fa-trash-can"></i></a>
                 </td>
             </tr>

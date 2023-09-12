@@ -7,7 +7,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from .forms import *
 from .models import *
-
+import locale
 from django.contrib.auth.decorators import login_required # para vistas basadas en funciones
 
 def login_request(request):
@@ -25,9 +25,20 @@ def login_request(request):
             message = ""
             allProducts = Producto.objects.all()[:10] # Con [:10] se agrega un límite de 10 registros
             products    = True
+            productos_img = []
+
+            locale.setlocale(locale.LC_ALL, 'es_CL')
             if not allProducts:
                 message  = "No existen productos! :("
                 products = False
+            else:
+                for product in allProducts:
+                    imagen = ProductoImg.objects.filter(id_producto = product).first()
+                    product.precio = locale.format_string("%d", product.precio, grouping=True)
+                    productos_img.append({
+                        "product": product,
+                        "imagen": imagen.imagen
+                    })
 
             context = {
                 "title"        : "Home",
@@ -35,7 +46,7 @@ def login_request(request):
                 "msg"          : message,
                 "mensaje"      : f"Usuario {username} logueado correctamente!",
                 "products"     : products,
-                "allProducts"  : allProducts
+                "allProducts"  : productos_img if len(allProducts) > 0 else allProducts
             }
             if usuario is not None:
                 login(request, usuario)
@@ -143,7 +154,13 @@ def mis_compras(request):
     usuario = request.user
     cliente = User.objects.filter(username=usuario).first()
 
+    locale.setlocale(locale.LC_ALL, 'es_CL')
+    
     compras = Compra.objects.filter(cliente = cliente).values('id','total','fecha')
+    for product in compras:
+        imprime("product:", product)
+        product['total'] = locale.format_string("%d", product['total'], grouping=True)
+        product['fecha'] = product['fecha'].strftime('%d/%m/%Y')
 
     contexto = {
         "title" : "Mis Compras",
@@ -151,3 +168,11 @@ def mis_compras(request):
     }
 
     return render(request, "ComprasApp/mis_compras.html", contexto)
+
+
+def imprime(descripcion, parametro):
+    print()
+    print()
+    print(descripcion, parametro)
+    print()
+    print()

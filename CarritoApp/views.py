@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from ProductosApp.models import Producto
+from ProductosApp.models import Producto, ProductoImg
 from CompraApp.models import Compra, CompraDetalle
 from django.contrib.auth.decorators import login_required # para vistas basadas en funciones
 import locale
@@ -20,13 +20,28 @@ def carrito(request):
 
     total = 0
     detalle = { }
+
+    producto_img = []
+
     if carrito:
         total = locale.format_string("%d", carrito.total, grouping=True)
-        detalle = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto')
+        allProducts = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto')
+        # detalle = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto')
 
+        for product in allProducts:
+            imprime("producto", product.id_producto)
+            imagen = ProductoImg.objects.filter(id_producto = product.id_producto).first()
+            product.precio = locale.format_string("%d", product.precio, grouping=True)
+            product.subtotal = locale.format_string("%d", product.subtotal, grouping=True)
+
+            producto_img.append({
+                "producto" : product,
+                "img"      : imagen.imagen
+            })
+    imprime("productos/img", producto_img)
     contexto = {
         "title"           : "Carrito de Compras",
-        "carrito_detalle" : detalle,
+        "carrito_detalle" : producto_img,
         "mensaje"         : "",
         "total"           : total
     }
@@ -46,6 +61,9 @@ def agregar_producto(request, id):
         }
         return render(request, "proyecto_final/auth/login.html", contexto)
     else:
+
+        locale.setlocale(locale.LC_ALL, 'es_CL')
+        
         msje_salida = ""
 
         producto = Producto.objects.filter(id = id).values('id','descripcion','precio') # obtenemos el producto
@@ -102,11 +120,24 @@ def agregar_producto(request, id):
                 new_linea.save()
                 msje_salida = "Producto agregado!"
 
-            locale.setlocale(locale.LC_ALL, 'es_CL')
+            allProducts = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto')
+            productos_img = []
+
+            imprime("all p",allProducts)
+
+            for product in allProducts:
+                imagen = ProductoImg.objects.filter(id_producto = product.id_producto).first()
+                product.precio = locale.format_string("%d", product.precio, grouping=True)
+                productos_img.append({
+                    "producto": product,
+                    "img": imagen.imagen
+                })
+            imprime("if prod:", productos_img)
             total = locale.format_string("%d", carrito.total, grouping=True)
             contexto = {
                 "title"           : titulo,
-                "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),
+                # "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),
+                "carrito_detalle" : productos_img,
                 "mensaje"         : msje_salida,
                 "total"           : total,
                 "id_carrito"      : int(carrito.id)
@@ -129,12 +160,28 @@ def agregar_producto(request, id):
             new_detalle.save()
             msje_salida = f"Nuevo carrito creado, agregamos el producto '{producto_descripcion}'!"
 
-            locale.setlocale(locale.LC_ALL, 'es_CL')
+            
             total = locale.format_string("%d", new_carrito.total, grouping=True)
 
+            allProducts = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto')
+            productos_img = []
+            imprime("all prod",allProducts)
+            if len(allProducts) > 0:
+                for product in allProducts:
+                    imagen = ProductoImg.objects.filter(id_producto = product.id_producto).first()
+                    product.precio = locale.format_string("%d", product.precio, grouping=True)
+                    productos_img.append({
+                        "producto": product,
+                        "img": imagen.imagen
+                    })
+
+            imprime("else prod:", productos_img)
+            
+            total = locale.format_string("%d", carrito.total, grouping=True)
             contexto = {
                 "title"           : titulo,
-                "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = id_new, cliente = cliente),
+                # "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),
+                "carrito_detalle" : productos_img,
                 "mensaje"         : msje_salida,
                 "total"           : total,
                 "id_carrito"      : int(id_new)
@@ -166,10 +213,23 @@ def modificar_cantidad(request, id, linea, accion):
             linea_detalle.subtotal -= producto.precio
             linea_detalle.save()
 
+            producto_img = []
+            allProducts = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto')
+
+            for product in allProducts:
+                imprime("producto", product.id_producto)
+                imagen = ProductoImg.objects.filter(id_producto = product.id_producto).first()
+                product.precio = locale.format_string("%d", product.precio, grouping=True)
+                product.subtotal = locale.format_string("%d", product.subtotal, grouping=True)
+
+                producto_img.append({
+                    "producto" : product,
+                    "img"      : imagen.imagen
+                })
 
             contexto = {
                 "Title"           : "Carrito de Compras",
-                "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),
+                "carrito_detalle" : producto_img,
                 "mensaje"         : "Cantidad actualizada! Hemos quitado una unidad",
                 "total"           : locale.format_string("%d", carrito.total, grouping=True),
                 "id_carrito"      : carrito.id
@@ -177,9 +237,23 @@ def modificar_cantidad(request, id, linea, accion):
 
             return render(request, "CarritoApp/carrito_detalle.html", contexto)
         
-        contexto = {
-                "title"           : "Carrito de Compras",
-                "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),
+        producto_img = []
+        allProducts = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto')
+
+        for product in allProducts:
+            imprime("producto", product.id_producto)
+            imagen = ProductoImg.objects.filter(id_producto = product.id_producto).first()
+            product.precio = locale.format_string("%d", product.precio, grouping=True)
+            product.subtotal = locale.format_string("%d", product.subtotal, grouping=True)
+
+            producto_img.append({
+                "producto" : product,
+                "img"      : imagen.imagen
+            })
+
+            contexto = {
+                "Title"           : "Carrito de Compras",
+                "carrito_detalle" : producto_img,
                 "mensaje"         : "Ya lleva la cantidad mínima, si quiere quitar el producto, por favor click en su respectivo botón!",
                 "total"           : locale.format_string("%d", carrito.total, grouping=True),
                 "id_carrito"      : carrito.id
@@ -193,10 +267,24 @@ def modificar_cantidad(request, id, linea, accion):
         linea_detalle.cantidad += 1
         linea_detalle.subtotal += producto.precio
         linea_detalle.save()
+
+        producto_img = []
+        allProducts = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto')
+
+        for product in allProducts:
+            imprime("producto", product.id_producto)
+            imagen = ProductoImg.objects.filter(id_producto = product.id_producto).first()
+            product.precio = locale.format_string("%d", product.precio, grouping=True)
+            product.subtotal = locale.format_string("%d", product.subtotal, grouping=True)
+
+            producto_img.append({
+                "producto" : product,
+                "img"      : imagen.imagen
+            })
         
         contexto = {
                 "title"           : "Carrito de Compras",
-                "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),
+                "carrito_detalle" : producto_img,
                 "mensaje"         : "Cantidad actualizada! Hemos agregado una unidad",
                 "total"           : locale.format_string("%d", carrito.total, grouping=True),
                 "id_carrito"      : carrito.id
@@ -214,9 +302,23 @@ def modificar_cantidad(request, id, linea, accion):
 
         linea_detalle.delete()
 
+        producto_img = []
+        allProducts = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto')
+
+        for product in allProducts:
+            imprime("producto", product.id_producto)
+            imagen = ProductoImg.objects.filter(id_producto = product.id_producto).first()
+            product.precio = locale.format_string("%d", product.precio, grouping=True)
+            product.subtotal = locale.format_string("%d", product.subtotal, grouping=True)
+
+            producto_img.append({
+                "producto" : product,
+                "img"      : imagen.imagen
+            })
+        
         contexto = {
                 "title"           : "Carrito de Compras",
-                "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),
+                "carrito_detalle" : producto_img,
                 "mensaje"         : mensaje,
                 "total"           : locale.format_string("%d", carrito.total, grouping=True),
                 "id_carrito"      : carrito.id
@@ -225,9 +327,23 @@ def modificar_cantidad(request, id, linea, accion):
         return render(request, "CarritoApp/carrito_detalle.html", contexto)
 
     else:
+        producto_img = []
+        allProducts = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto')
+
+        for product in allProducts:
+            imprime("producto", product.id_producto)
+            imagen = ProductoImg.objects.filter(id_producto = product.id_producto).first()
+            product.precio = locale.format_string("%d", product.precio, grouping=True)
+            product.subtotal = locale.format_string("%d", product.subtotal, grouping=True)
+
+            producto_img.append({
+                "producto" : product,
+                "img"      : imagen.imagen
+            })
+        
         contexto = {
                 "title"           : "Carrito de Compras",
-                "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),
+                "carrito_detalle" : producto_img,
                 "mensaje"         : "Acción inválida!",
                 "total"           : locale.format_string("%d", carrito.total, grouping=True),
                 "id_carrito"      : carrito.id
@@ -280,7 +396,9 @@ def pre_finalizar_pedido(request):
 
         compra_detalle = CompraDetalle.objects.filter(id_compra = new_compra).select_related('id_producto') # .values('linea','id_producto','precio','cantidad','subtotal')
        
-        
+        for item in detalle:
+            item.precio = locale.format_string("%d", item.precio, grouping=True)
+            item.subtotal = locale.format_string("%d", item.subtotal, grouping=True)
         contexto = {
             "title"   : "Compra Finalizada",
             "total"   : locale.format_string("%d", new_compra.total, grouping=True),
@@ -290,6 +408,10 @@ def pre_finalizar_pedido(request):
         }
 
         return render(request, "CarritoApp/finalizar.html", contexto)
+    
+    for item in detalle:
+        item.precio = locale.format_string("%d", item.precio, grouping=True)
+        item.subtotal = locale.format_string("%d", item.subtotal, grouping=True)
     
     contexto = {
         "title"           : "Confirmar Compra",

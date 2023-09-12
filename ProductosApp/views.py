@@ -26,22 +26,31 @@ def home_productos(request):
     allProducts = Producto.objects.all()[:10] # Con [:10] se agrega un límite de 10 registros
     
     products    = True
+    productos_img = []
+
+    locale.setlocale(locale.LC_ALL, 'es_CL')
     if not allProducts:
         message  = "No existen productos! :("
         products = False
+    else:
+        for product in allProducts:
+            imagen = ProductoImg.objects.filter(id_producto = product).first()
+            product.precio = locale.format_string("%d", product.precio, grouping=True)
+            productos_img.append({
+                "product": product,
+                "imagen": imagen.imagen
+            })
 
     context = {
         "title"       : pageTitle,
         "titleSection": titleSection,
         "msg"         : message,
         "products"    : products,
-        "allProducts" : allProducts,
+        "allProducts" : productos_img if len(allProducts) > 0 else allProducts,
         "redirect"    : 'home_productos'
     }
     
-    return render(request,
-                  "ProductosApp/productos/home/home_contenido.html",
-                  context)
+    return render(request, "ProductosApp/productos/home/home_contenido.html", context)
     
 def proteins(request):
     pageTitle = "Proteínas"
@@ -51,22 +60,31 @@ def proteins(request):
     allProducts = Producto.objects.filter(categoria = 1)
 
     products    = True
+    productos_img = []
+
+    locale.setlocale(locale.LC_ALL, 'es_CL')
     if not allProducts:
         message  = "No existen productos! :("
         products = False
+    else:
+        for product in allProducts:
+            imagen = ProductoImg.objects.filter(id_producto = product).first()
+            product.precio = locale.format_string("%d", product.precio, grouping=True)
+            productos_img.append({
+                "product": product,
+                "imagen": imagen.imagen
+            })
 
     context = {
         "title"       : pageTitle,
         "titleSection": titleSection,
         "msg"         : message,
         "products"    : products,
-        "allProducts" : allProducts,
+        "allProducts" : productos_img if len(allProducts) > 0 else allProducts,
         "redirect"    : 'productos_proteinas'
     }
 
-    return render(request,
-                  "ProductosApp/productos/home/home_contenido.html",
-                  context)
+    return render(request, "ProductosApp/productos/home/home_contenido.html", context)
 
 def creatines(request):
     pageTitle = "Creatinas"
@@ -76,22 +94,31 @@ def creatines(request):
     allProducts = Producto.objects.filter(categoria = 2)
 
     products    = True
+    productos_img = []
+
+    locale.setlocale(locale.LC_ALL, 'es_CL')
     if not allProducts:
         message  = "No existen productos! :("
         products = False
+    else:
+        for product in allProducts:
+            imagen = ProductoImg.objects.filter(id_producto = product).first()
+            product.precio = locale.format_string("%d", product.precio, grouping=True)
+            productos_img.append({
+                "product": product,
+                "imagen": imagen.imagen
+            })
 
     context = {
         "title"       : pageTitle,
         "titleSection": titleSection,
         "msg"         : message,
         "products"    : products,
-        "allProducts" : allProducts,
+        "allProducts" : productos_img if len(allProducts) > 0 else allProducts,
         "redirect"    : 'productos_creatinas'
     }
 
-    return render(request,
-                  "ProductosApp/productos/home/home_contenido.html",
-                  context)
+    return render(request, "ProductosApp/productos/home/home_contenido.html", context)
 
 def otros(request):
     pageTitle = "Otros Productos"
@@ -101,22 +128,31 @@ def otros(request):
     allProducts = Producto.objects.exclude(Q(categoria=1) | Q(categoria=2))
 
     products    = True
+    productos_img = []
+
+    locale.setlocale(locale.LC_ALL, 'es_CL')
     if not allProducts:
         message  = "No existen productos! :("
         products = False
+    else:
+        for product in allProducts:
+            imagen = ProductoImg.objects.filter(id_producto = product).first()
+            product.precio = locale.format_string("%d", product.precio, grouping=True)
+            productos_img.append({
+                "product": product,
+                "imagen": imagen.imagen
+            })
 
     context = {
         "title"       : pageTitle,
         "titleSection": titleSection,
         "msg"         : message,
         "products"    : products,
-        "allProducts" : allProducts,
+        "allProducts" : productos_img if len(allProducts) > 0 else allProducts,
         "redirect"    : 'productos_otros'
     }
 
-    return render(request,
-                  "ProductosApp/productos/home/home_contenido.html",
-                  context)
+    return render(request, "ProductosApp/productos/home/home_contenido.html", context)
 
 def todos(request):
     pageTitle = "Todos Nuestros Productos"
@@ -126,28 +162,40 @@ def todos(request):
     allProducts = Producto.objects.all()
 
     products    = True
+    productos_img = []
+
+    locale.setlocale(locale.LC_ALL, 'es_CL')
     if not allProducts:
         message  = "No existen productos! :("
         products = False
+    else:
+        for product in allProducts:
+            imagen = ProductoImg.objects.filter(id_producto = product).first()
+            product.precio = locale.format_string("%d", product.precio, grouping=True)
+            productos_img.append({
+                "product": product,
+                "imagen": imagen.imagen
+            })
 
     context = {
         "title"       : pageTitle,
         "titleSection": titleSection,
         "msg"         : message,
         "products"    : products,
-        "allProducts" : allProducts,
+        "allProducts" : productos_img if len(allProducts) > 0 else allProducts,
         "redirect"    : 'productos_otros'
     }
 
-    return render(request,
-                  "ProductosApp/productos/home/home_contenido.html",
-                  context)
+    return render(request, "ProductosApp/productos/home/home_contenido.html", context)
 
 def comentario(request, id):
     usuario = request.user
     cliente, created = User.objects.get_or_create(username=usuario)
 
     producto = Producto.objects.filter(id=id).first()
+    img = ProductoImg.objects.filter(id_producto = producto).first()
+    
+    locale.setlocale(locale.LC_ALL, 'es_CL')
 
     if request.method == "POST":
 
@@ -160,19 +208,22 @@ def comentario(request, id):
             fecha       = timezone.now().date())
         new_comentario.save()
 
+        producto.precio = locale.format_string("%d", producto.precio, grouping=True)
         contexto = {
             "title"       : "Agregar Comentario",
             "comentarios" : ComentarioProducto.objects.filter(id_producto=producto).order_by('-fecha').select_related('id_producto'),
             "mensaje"     : "Comentario Agregado!",
-            "producto"    : producto
+            "producto"    : producto,
+            "img"         : img.imagen.url if img.imagen else "products/default.png"
         }
         return render(request, "ProductosApp/productos/comentario/comentario.html", contexto)
 
-    
+    producto.precio = locale.format_string("%d", producto.precio, grouping=True)
     contexto = {
         "title"       : "Agregar Comentario",
         "comentarios" : ComentarioProducto.objects.filter(id_producto=producto).order_by('-fecha').select_related('id_producto','cliente'),
-        "producto"    : producto
+        "producto"    : producto,
+        "img"         : img.imagen.url if img.imagen else "products/default.png"
     }
     return render(request, "ProductosApp/productos/comentario/comentario.html", contexto)
 
@@ -183,10 +234,22 @@ def administrar_productos(request):
 
     if not usuario.is_superuser:
         return redirect('home_productos')
+    
+    locale.setlocale(locale.LC_ALL, 'es_CL')
+    productos_img = []
+    allProducts = Producto.objects.all().select_related('categoria')
+    for producto in allProducts:
+        img = ProductoImg.objects.filter(id_producto = producto).first()
+        producto.precio = locale.format_string("%d", producto.precio, grouping=True)
+        productos_img.append({
+            "producto" : producto,
+            "img"      : img.imagen
+        })
+
 
     contexto = {
         "title" : "Administrar Productos",
-        "productos" : Producto.objects.all().select_related('categoria')
+        "productos" : productos_img
     }
     return render(request, "ProductosApp/admin/listado_productos.html", contexto)
 
@@ -202,9 +265,9 @@ def editar_producto(request, id):
     categorias = Categoria.objects.all()
 
     if request.method == "POST":
-
-        imagen       = request.FILES['imagen']
-        descripcion  = request.POST['descripcion']
+        # capturamos los datos         
+        param_img    = request.FILES['imagen'] if len(request.FILES) else ""
+        descripcion  = request.POST['descripcion'].strip()
         id_categoria = request.POST['categoria']
         precio       = request.POST['precio']
 
@@ -242,6 +305,7 @@ def editar_producto(request, id):
         
         # Fin de validaciones ...
 
+        # Actualizamos el producto ...
         categoria_producto   = Categoria.objects.filter(id = id_categoria).first()
         producto.descripcion = descripcion.upper()
         producto.categoria   = categoria_producto
@@ -249,25 +313,37 @@ def editar_producto(request, id):
         producto.save()
 
         msg_producto = "Producto actualizado!"
-        msg_imagen   = ""
-
-        img = ProductoImg.objects.filter(id_producto = producto).first()
-        if img:
-            img.imagen = imagen
-            img.save()
-            msg_imagen = "Imagen actualizada!"
-        else:
-            new_img = ProductoImg(imagen = imagen, id_producto = producto)
-            new_img.save()
-            msg_imagen = "Imagen agregada!"
         
+        # Validamos si el cliente subió una imagen para agregarla o actualizarla ...
+        img = ProductoImg.objects.filter(id_producto = producto).first()
+        if not img:
+            img = ProductoImg(
+                imagen="products/default.png" if param_img == "" else param_img,
+                id_producto=producto
+            )
+            msg_producto += " e Imagen agregada!"
+        elif not img.imagen:
+            img.imagen = "products/default.png" if param_img == "" else param_img
+        else:
+            
+            if "default" in str(img.imagen):
+                img.imagen = "products/default.png" if param_img == "" else param_img                
+            else:
+                imprime("no contiene default","")
+                if param_img != "" and param_img != "":
+                    img.imagen = param_img
+                    msg_producto += " e Imagen actualizada!"
+                # end if
+            # end if
+        img.save()
+                
         img = ProductoImg.objects.filter(id_producto = producto).first()
         contexto = {
             "title"      : f"Editar: {producto.descripcion}",
             "producto"   : producto,
             "categorias" : categorias,
             "img"        : img.imagen.url,
-            "mensaje"    : msg_producto + " e " + msg_imagen
+            "mensaje"    : msg_producto
         }
         return render(request, "ProductosApp/admin/editar_producto.html", contexto)
 
@@ -281,10 +357,3 @@ def editar_producto(request, id):
     }
 
     return render(request, "ProductosApp/admin/editar_producto.html", contexto)
-
-def GetImagen(id):
-    img = ProductoImg.objects.filter(id = id)
-    if len(img) != 0:
-        return img[0].imagen.url
-    
-    return "/media/products/default.png"

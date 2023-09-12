@@ -11,20 +11,21 @@
     <h4 class="my-2">{{ titleSection }}</h4>
 
     <section class="d-flex card-deck mt-2">
-        {% for producto in allProducts %}
-        <div class="card mx-1 w-50">
-            <img class="card-img-top" src="" alt="{{ producto.descripcion }}">
+        {% for item in allProducts %}
+        <div class="card mx-1" style="width: 250px;">
+            <img class="card-img-top" src="{{ item.imagen.url }}" alt="{{ item.product.descripcion }}">
             <div class="card-body">
-                <h5 class="card-title">{{ producto.descripcion }}</h5>
-                <p class="card-text">${{ producto.precio }}</p>
+                <h5 class="card-title">{{ item.product.descripcion }}</h5>
+                <p class="card-text">${{ item.product.precio }}</p>
                 <div class="d-flex">
-                    <form action="{% url 'agregar_al_carro' producto.id %}" method="post" class="mx-1">
+                    
+                    <form action="{% url 'agregar_al_carro' item.product.id %}" method="post" class="mx-1">
                         {% csrf_token %}
                         <input type="hidden" name="redirect" id="redirect" value="{{ redirect }}">
                         <button class="btn btn-success btn-sm" type="submit"><i class="fa-solid fa-cart-shopping"></i> Agregar</button>
                     </form>
                     
-                    <a href="{% url 'comentar_producto' producto.id %}" class="btn btn-warning btn-sm mx-1"><i class="fa-regular fa-comment"></i> Comentar</a>
+                    <a href="{% url 'comentar_producto' item.product.id %}" class="btn btn-warning btn-sm mx-1"><i class="fa-regular fa-comment"></i> Comentar</a>
                 </div>
                 
             </div>
