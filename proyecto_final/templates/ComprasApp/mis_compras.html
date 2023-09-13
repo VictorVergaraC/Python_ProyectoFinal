@@ -27,7 +27,7 @@
                         <td>${{ item.total }}</td>
                         <td>{{ item.fecha }}</td>
                         <td>
-                            <a href="#" class="btn btn-success btn-sm"><i class="fa-solid fa-magnifying-glass"></i></a>
+                            <a href="{% url 'detalle_compra' item.id %}" class="btn btn-success btn-sm"><i class="fa-solid fa-magnifying-glass"></i></a>
                         </td>
                     </tr>
                 {% endfor %}

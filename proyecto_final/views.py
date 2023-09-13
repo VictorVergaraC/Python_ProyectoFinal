@@ -169,6 +169,42 @@ def mis_compras(request):
 
     return render(request, "ComprasApp/mis_compras.html", contexto)
 
+@login_required
+def compra_detalle(request, id):
+    usuario = request.user
+    cliente = User.objects.filter(username=usuario).first()
+
+    locale.setlocale(locale.LC_ALL, 'es_CL')
+
+    compra = Compra.objects.filter(id = int(id), cliente = cliente).first()
+    compra_detalle = CompraDetalle.objects.filter(id_compra = compra.id).select_related('id_producto')
+
+    producto_img = []
+    
+    for item in compra_detalle:
+        imprime("item:",item.id_producto)
+
+        img = ProductoImg.objects.filter(id_producto = item.id_producto).first()
+        producto_img.append({
+            "imagen"      : img.imagen,
+            "linea"       : item.linea,
+            "id_producto" : item.id_producto,
+            "precio"      : locale.format_string("%d", item.id_producto.precio, grouping=True),
+            "cantidad"    : locale.format_string("%d", item.cantidad, grouping=True),
+            "subtotal"    : locale.format_string("%d", item.subtotal, grouping=True)
+        })
+        
+    contexto = {
+        "title"   : "Detalle de Compra",
+        "titulo"  : "¡Aquí tienes el detalle de tu compra!",
+        "total"   : locale.format_string("%d", compra.total, grouping=True),
+        "usuario" : usuario,
+        "detalle" : producto_img,
+        "fecha"   : compra.fecha.strftime('%d/%m/%Y'),
+    }
+
+    return render(request, "CarritoApp/finalizar.html", contexto)
+
 
 def imprime(descripcion, parametro):
     print()

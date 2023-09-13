@@ -32,6 +32,9 @@
                         <a href="{% url 'comentar_producto' item.producto.id_producto.id %}">
                             <img src="{{ item.img.url }}" alt="{{ item.producto.descripcion }}" class="mx-auto" style="width: 50px;">
                         </a>
+                        <!-- <a href="#">
+                            <img src="#" alt="{{ item.producto.id_producto.id }}" class="mx-auto" style="width: 50px;">
+                        </a> -->
                     </td>
                     <td>{{ item.producto.id_producto.descripcion }}</td>
                     <td>${{ item.producto.precio }}</td>

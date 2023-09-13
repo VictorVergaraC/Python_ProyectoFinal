@@ -9,7 +9,7 @@
 <main class="d-flex flex-column justify-content-center">
 
     <div class="jumbotron text-center mt-3">
-        <h1 class="display-4 text-success">¡Compra realizada exitosamente!</h1>
+        <h1 class="display-4 text-success">{{ titulo }}</h1>
         <p class="lead">Gracias por tu compra estimad@ <strong>{{ usuario }}</strong>. Aquí tienes los detalles de tu pedido:</p>
         <hr class="my-4">
         <div class="container">
@@ -18,6 +18,7 @@
                     <tr>
                         <th>Item</th>
                         <th>Producto</th>
+                        <th>Descripción</th>
                         <th>Precio</th>
                         <th>Cantidad</th>
                         <th>Subtotal</th>
@@ -27,6 +28,11 @@
                     {% for item in detalle %}
                     <tr>
                         <td>{{ item.linea }}</td>
+                        <td>
+                            <a href="{% url 'comentar_producto' item.id_producto.id %}">
+                                <img src="{{ item.imagen.url }}" alt="{{ item.id_producto.descripcion }}" class="mx-auto" style="width: 50px;">
+                            </a>
+                        </td>
                         <td>{{ item.id_producto.descripcion }}</td>
                         <td>${{ item.precio }}</td>
                         <td>{{ item.cantidad }}</td>
@@ -37,13 +43,14 @@
                         <td></td>
                         <td></td>
                         <td></td>
+                        <td></td>
                         <td><strong>Total:</strong></td>
                         <td>${{ total }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <p>Recibirás un correo electrónico de confirmación con más detalles. Si tienes alguna pregunta, no dudes en contactarnos.</p>
+        <p>{{ mensaje }}</p>
         <p class="lead">
             <a class="btn btn-primary btn-sm" href="{% url 'home_productos' %}" role="button">Volver a la tienda</a>
         </p>

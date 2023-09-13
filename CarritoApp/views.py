@@ -19,17 +19,17 @@ def carrito(request):
     locale.setlocale(locale.LC_ALL, 'es_CL')
 
     total = 0
-    detalle = { }
 
     producto_img = []
 
     if carrito:
         total = locale.format_string("%d", carrito.total, grouping=True)
         allProducts = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto')
-        # detalle = CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto')
 
         for product in allProducts:
-            imprime("producto", product.id_producto)
+            
+            imprime("product-subtotal", product.id_producto.id)
+
             imagen = ProductoImg.objects.filter(id_producto = product.id_producto).first()
             product.precio = locale.format_string("%d", product.precio, grouping=True)
             product.subtotal = locale.format_string("%d", product.subtotal, grouping=True)
@@ -38,7 +38,7 @@ def carrito(request):
                 "producto" : product,
                 "img"      : imagen.imagen
             })
-    imprime("productos/img", producto_img)
+    
     contexto = {
         "title"           : "Carrito de Compras",
         "carrito_detalle" : producto_img,
@@ -392,19 +392,37 @@ def pre_finalizar_pedido(request):
         carrito.delete()
         detalle.delete()
 
-        compra = Compra.objects.filter(cliente=cliente).values('cliente','total','ciudad','direccion','contacto', 'fecha').order_by('-fecha').first()
+        compra = Compra.objects.filter(id = new_compra.id, cliente=cliente).order_by('-fecha').first()
+        compra_detalle = CompraDetalle.objects.filter(id_compra = compra.id).select_related('id_producto') # .values('linea','id_producto','precio','cantidad','subtotal')
 
-        compra_detalle = CompraDetalle.objects.filter(id_compra = new_compra).select_related('id_producto') # .values('linea','id_producto','precio','cantidad','subtotal')
-       
-        for item in detalle:
-            item.precio = locale.format_string("%d", item.precio, grouping=True)
-            item.subtotal = locale.format_string("%d", item.subtotal, grouping=True)
+        producto_img = []
+
+        for item in compra_detalle:
+            imprime("item:",item.id_producto)
+
+            img = ProductoImg.objects.filter(id_producto = item.id_producto).first()
+            producto_img.append({
+                "imagen"      : img.imagen,
+                "linea"       : item.linea,
+                "id_producto" : item.id_producto,
+                "precio"      : locale.format_string("%d", item.id_producto.precio, grouping=True),
+                "cantidad"    : locale.format_string("%d", item.cantidad, grouping=True),
+                "subtotal"    : locale.format_string("%d", item.subtotal, grouping=True)
+            })
+
+        # for item in compra_detalle:
+        #     item.precio = locale.format_string("%d", item.precio, grouping=True)
+        #     item.subtotal = locale.format_string("%d", item.subtotal, grouping=True)
+
         contexto = {
             "title"   : "Compra Finalizada",
+            "titulo"  : "¡Compra realizada exitosamente!",
             "total"   : locale.format_string("%d", new_compra.total, grouping=True),
             "usuario" : usuario,
-            "detalle" : compra_detalle,
-            "fecha"   : new_compra.fecha.strftime('%d/%m/%Y')
+            # "detalle" : compra_detalle,
+            "detalle" : producto_img,
+            "fecha"   : new_compra.fecha.strftime('%d/%m/%Y'),
+            "mensaje" : "Recibirás un correo electrónico de confirmación con más detalles. Si tienes alguna pregunta, no dudes en contactarnos."
         }
 
         return render(request, "CarritoApp/finalizar.html", contexto)
