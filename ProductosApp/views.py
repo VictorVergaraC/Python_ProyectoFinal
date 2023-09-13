@@ -127,7 +127,7 @@ def otros(request):
     titleSection = "Todo en Otros Productos"
 
     message   = ""
-    allProducts = Producto.objects.exclude(Q(categoria=1) | Q(categoria=2))
+    allProducts = Producto.objects.exclude(Q(categoria=1) | Q(categoria=2) | Q(categoria=4))
 
     products    = True
     productos_img = []

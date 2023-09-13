@@ -205,6 +205,18 @@ def compra_detalle(request, id):
 
     return render(request, "CarritoApp/finalizar.html", contexto)
 
+def no_disponible(request):
+    contexto = {
+        "title" : "Página no disponible"
+    }
+
+    return render(request, "proyecto_final/error/no_disponible.html", contexto)
+
+def acerca_de_mi(request):
+    contexto = {
+        "title" : "Acerca de mi"
+    }
+    return render(request, "proyecto_final/about/acerca.html", contexto)
 
 def imprime(descripcion, parametro):
     print()

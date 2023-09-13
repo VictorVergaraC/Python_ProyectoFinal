@@ -1,0 +1,50 @@
+{% extends "proyecto_final/home.html" %}
+
+{% load static %}
+
+{% block title_page %} {{ title }} {% endblock %}
+
+{% block content %}
+
+<main class="d-flex flex-column my-3">
+
+    <div class="container mt-2">
+        <div class="card" style="max-width: 800px;">
+            <div class="card-body">
+                <h5 class="card-title">Nombre y edad</h5>
+                <p class="card-text">Mi nombre es Victor Vergara, y tengo 24 años.</p>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-2">
+        <div class="card" style="max-width: 800px;">
+            <div class="card-body">
+                <h5 class="card-title">Nacionalidad</h5>
+                <p class="card-text">Soy chileno, nacido y criado en la comuna de Pucón, Región de la Araucanía.</p>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-2">
+        <div class="card" style="max-width: 800px;">
+            <div class="card-body">
+                <h5 class="card-title">A qué me dedico</h5>
+                <p class="card-text">Profesionalmente soy Ingeniero en Informática, egresado en el año 2021 y titulado en noviembre del 2022. Ejerzo como desarrollador desde junio del 2022. </p>
+                <p class="card-text">Los lenguajes de programación que manejo son: PHP, Javascript, C#, Visual Basic, Java, HTML y CSS (aunque no sean lenguajes como tal), y ahora Python, aunque ya lo había aprendido pero era poco lo que me acordaba. Y bases de datos: de momento MySQL y SQL.</p>
+                <p class="card-text">En mis tiempos libres voy al gym, me gusta el mundo del culturismo pero sólo como espectador. Aunque no me cierro a nada en algún futuro.</p>
+                <p class="card-text">También me gusta ver fútbol de vez en cuando. Jugué en inferiores de Unión Española en la sub-14 y sub-15 (año 2013 y 2014). Y dejé el fútbol por temas personales.</p>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-2">
+        <div class="card" style="max-width: 800px;">
+            <div class="card-body">
+                <h5 class="card-title">Mis futuras metas</h5>
+                <p class="card-text">Como profesional, en resumen sería aprender, debido a que cada vez hay nuevas tecnologías, por lo que no me gustaría quedarme atrás.</p>
+                <p class="card-text">Como persona, seguir ejerciendo los valores que me brindó mi familia, ser un buen hijo, buen hermano y un buen amigo.</p>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}

@@ -51,7 +51,10 @@
                         <a class="nav-link" aria-current="page" href="{% url 'productos_accesorios' %}">Accesorios</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contacto</a>
+                        <a class="nav-link" href="{% url 'no_disponible' %}">Contacto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'acerca_de' %}">Acerca de Mi</a>
                     </li>
                 </ul>
                 {% if user.is_authenticated %}
