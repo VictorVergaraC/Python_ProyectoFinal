@@ -1,4 +1,4 @@
-### Instrucciones de uso
+## Instrucciones de uso
 
 - Primero que todo ejecutar el comando: `python manage.py makemigrations`
 - Luego ejecutar el comando `python manage.py migrate`
