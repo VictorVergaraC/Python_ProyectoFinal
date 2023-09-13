@@ -27,23 +27,20 @@
             <tbody>
                 {% for item in carrito_detalle %}
                 <tr>
-                    <td>{{ item.producto.linea }}</td>
+                    <td>{{ item.linea }}</td>
                     <td>
-                        <a href="{% url 'comentar_producto' item.producto.id_producto.id %}">
-                            <img src="{{ item.img.url }}" alt="{{ item.producto.descripcion }}" class="mx-auto" style="width: 50px;">
+                        <a href="{% url 'comentar_producto' item.id_producto.id %}">
+                            <img src="{{ item.img.url }}" alt="{{ item.descripcion }}" class="mx-auto" style="width: 50px;">
                         </a>
-                        <!-- <a href="#">
-                            <img src="#" alt="{{ item.producto.id_producto.id }}" class="mx-auto" style="width: 50px;">
-                        </a> -->
                     </td>
-                    <td>{{ item.producto.id_producto.descripcion }}</td>
-                    <td>${{ item.producto.precio }}</td>
-                    <td>{{ item.producto.cantidad }}</td>
-                    <td>${{ item.producto.subtotal }}</td>
+                    <td>{{ item.id_producto.descripcion }}</td>
+                    <td>${{ item.precio }}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>${{ item.subtotal }}</td>
                     <td class="d-flex gap-1 justify-content-center">
-                        <a href="{% url 'sumar_cantidad' item.producto.id_carrito.id item.producto.linea 'restar' %} " class="btn btn-warning"><i class="fa-solid fa-minus"></i></a>
-                        <a href="{% url 'sumar_cantidad' item.producto.id_carrito.id item.producto.linea 'agregar' %}" class="btn btn-success"><i class="fa-solid fa-plus" ></i></a>
-                        <a href="{% url 'sumar_cantidad' item.producto.id_carrito.id item.producto.linea 'quitar' %} " class="btn btn-danger" ><i class="fa-solid fa-trash"></i></a>
+                        <a href="{% url 'sumar_cantidad' item.id_carrito.id item.linea 'restar' %} " class="btn btn-warning"><i class="fa-solid fa-minus"></i></a>
+                        <a href="{% url 'sumar_cantidad' item.id_carrito.id item.linea 'agregar' %}" class="btn btn-success"><i class="fa-solid fa-plus" ></i></a>
+                        <a href="{% url 'sumar_cantidad' item.id_carrito.id item.linea 'quitar' %} " class="btn btn-danger" ><i class="fa-solid fa-trash"></i></a>
                     </td>
                 </tr>
                 {% endfor %}

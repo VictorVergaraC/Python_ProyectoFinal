@@ -29,6 +29,10 @@ class ProductoImg(models.Model):
     def __str__(self):
         return f"Producto: {self.id_producto.descripcion}"
     
+    # def delete(self, *args, **kwargs):
+    #     self.imagen.delete()
+    #     super().delete(*args, **kwargs)
+    
 class ComentarioProducto(models.Model):
     descripcion = models.CharField(max_length=100)
     id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True, blank=True)

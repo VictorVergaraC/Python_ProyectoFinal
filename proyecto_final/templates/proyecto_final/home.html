@@ -90,11 +90,43 @@
         {% endblock %}
     </main>
 
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
         crossorigin="anonymous"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+
+        $('table').DataTable({
+            aaSorting: [],
+            searching: false,
+            pageLenght: 5,
+            lengthMenu: [[5, 10, 25, -1], [5, 10, 15, 'Todos']],
+            language: {
+						"decimal"		: "",
+						"emptyTable"	: "NO REGISTRA MARCACIONES",
+						"info"			: "Mostrando _END_ de _TOTAL_",
+						"infoEmpty"		: "Mostrando 0 de 0 Entradas",
+						"infoFiltered"	: "(Filtrado de _MAX_ total entradas)",
+						"infoPostFix"	: "",
+						"thousands"		: ",",
+						"lengthMenu"	: "Mostrar _MENU_ ",
+						"loadingRecords": "Cargando...",
+						"processing"	: "Procesando...",
+						"search"		: "Buscar: ",
+						"zeroRecords"	: "Sin resultados encontrados",
+						"paginate"		: {
+							"first"			: "Primero",
+							"last"			: "Ultimo",
+							"next"			: "Siguiente",
+							"previous"		: "Anterior"
+					}
+				}
+        })
+
         function formatPhoneNumber(input) {
             
             let numero = input.value;

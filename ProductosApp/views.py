@@ -10,6 +10,8 @@ import locale
 from datetime import datetime
 from django.utils import timezone
 from django.core.files.storage import FileSystemStorage
+import os
+from django.conf import settings
 
 def imprime(descripcion, parametro):
     print()
@@ -357,3 +359,124 @@ def editar_producto(request, id):
     }
 
     return render(request, "ProductosApp/admin/editar_producto.html", contexto)
+
+@login_required
+def eliminar_producto(request, id):
+    usuario = request.user
+    usuario = User.objects.get(username=usuario)
+
+    if not usuario.is_superuser:
+        return redirect('home_productos')
+
+    producto = Producto.objects.get(id = id)
+    producto_img = ProductoImg.objects.filter(id_producto = producto)
+
+    for img in producto_img:
+        img.imagen.delete()
+        img.delete()
+
+    producto.delete()
+
+    locale.setlocale(locale.LC_ALL, 'es_CL')
+    productos_img = []
+    allProducts = Producto.objects.all().select_related('categoria')
+    for producto in allProducts:
+        img = ProductoImg.objects.filter(id_producto = producto).first()
+        producto.precio = locale.format_string("%d", producto.precio, grouping=True)
+        productos_img.append({
+            "producto" : producto,
+            "img"      : img.imagen
+        })
+
+    contexto = {
+        "title"     : "Administrar Productos",
+        "productos" : productos_img,
+        "mensaje"   : "Producto eliminado correctamente!"
+    }
+    return render(request, "ProductosApp/admin/listado_productos.html", contexto)
+
+
+@login_required
+def crear_producto(request):
+    usuario = request.user
+    usuario = User.objects.get(username=usuario)
+
+    if not usuario.is_superuser:
+        return redirect('home_productos')
+    
+    categorias = Categoria.objects.all()
+
+    if request.method == "POST":
+
+        imprime("len:", len(request.FILES))
+
+        param_img    = request.FILES['imagen'] if len(request.FILES) > 0 else ""
+        descripcion  = request.POST['descripcion'].strip()
+        id_categoria = request.POST['categoria']
+        precio       = int(request.POST['precio'])
+
+        categoria = Categoria.objects.filter(id = int(id_categoria)).first()
+
+        mensaje = ""
+        errores = False
+        # Validaciones
+        if descripcion == "" or len(descripcion) <= 5:
+            mensaje = "Descripción muy corta!"
+            errores = True
+        if precio <= 0:
+            mensaje = "El precio no puede ser menor a 1"
+            errores = True
+        if not categoria:
+            mensaje = "La categoría no existe!"
+            errores = True
+        
+        if errores == True:
+            contexto = {
+                "title"      : "Administrar Productos!",
+                "categorias" : categorias,
+                "mensaje"    : mensaje
+            }
+            return render(request, "ProductosApp/admin/crear_producto.html", contexto)
+        # Fin validaciones ...
+
+        new_producto = Producto(
+            descripcion   = descripcion.upper(),
+            categoria     = categoria,
+            precio        = precio,
+            oferta        = False,
+            precio_oferta = 0,
+            activo        = True
+        )
+        new_producto.save()
+
+        new_producto_img = ProductoImg(
+            imagen      = "products/default.png" if param_img == "" else param_img,
+            id_producto = new_producto
+        )
+        new_producto_img.save()
+
+        locale.setlocale(locale.LC_ALL, 'es_CL')
+        productos_img = []
+        allProducts = Producto.objects.all().select_related('categoria')
+        for producto in allProducts:
+            img = ProductoImg.objects.filter(id_producto = producto).first()
+            producto.precio = locale.format_string("%d", producto.precio, grouping=True)
+            productos_img.append({
+                "producto" : producto,
+                "img"      : img.imagen
+            })
+
+        contexto = {
+            "title"     : "Administrar Productos",
+            "productos" : productos_img,
+            "mensaje"   : "Producto creado satisfactoriamente!"
+        }
+        return render(request, "ProductosApp/admin/listado_productos.html", contexto)
+
+
+    contexto = {
+        "title"      : "Crear Producto!",
+        "categorias" : categorias
+    }
+
+    return render(request, "ProductosApp/admin/crear_producto.html", contexto)

@@ -11,9 +11,11 @@ urlpatterns = [
     path('creatinas/', creatines, name="productos_creatinas"),
     path('otros/', otros, name="productos_otros"),
     path('todos/', todos, name="productos_todos"),
-    path('comentar/<id>/', comentario, name="comentar_producto"),
+    path('detalle/<id>/', comentario, name="comentar_producto"),
     path('administrar/', administrar_productos, name="administrar_productos"),
     path('editarproducto/<id>', editar_producto, name="editar_producto"),
+    path('eliminarproducto/<id>', eliminar_producto, name="eliminar_producto"),
+    path('crearproducto/', crear_producto, name="crear_producto"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

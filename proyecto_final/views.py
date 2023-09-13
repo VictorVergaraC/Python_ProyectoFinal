@@ -189,7 +189,7 @@ def compra_detalle(request, id):
             "imagen"      : img.imagen,
             "linea"       : item.linea,
             "id_producto" : item.id_producto,
-            "precio"      : locale.format_string("%d", item.id_producto.precio, grouping=True),
+            "precio"      : locale.format_string("%d", item.precio, grouping=True),
             "cantidad"    : locale.format_string("%d", item.cantidad, grouping=True),
             "subtotal"    : locale.format_string("%d", item.subtotal, grouping=True)
         })

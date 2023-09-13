@@ -1,0 +1,50 @@
+{% extends "proyecto_final/home.html" %}
+
+{% load static %}
+
+{% block title_page %} {{ title }} {% endblock %}
+
+{% block content %}
+
+<main class="d-flex justify-content-center">
+
+    <aside class="d-flex flex-column">
+        
+        <form action="{% url 'crear_producto' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group my-2">
+                <input class="form-control" type="file" id="imagen" name="imagen">
+            </div>
+            <div class="form-group my-2">
+                <label for="descripcion" class="form-label">Descripción</label>
+                <input name="descripcion" type="text" class="form-control text-uppercase" placeholder="Ingrese una descripción ..." required>
+            </div>
+            <div class="form-group my-2">
+                <label for="categoria" class="form-label">Categoría</label>
+                <select name="categoria" id="categoria" class="form-select">
+                    <option value="" selected disabled>Selecciona una opción ...</option>
+                    {% for item in categorias %}
+                    <option value="{{ item.id }}">
+                        {{ item.descripcion }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group my-2">
+                <label for="precio" class="form-label">Precio</label>
+                <input type="number" min="0" class="form-control" name="precio" value="">
+            </div>
+            <div class="form-group my-2 d-flex justify-content-end">
+                <button type="submit" class="btn btn-success btn-sm">Guardar</button>
+            </div>
+            <div class="form-group my-2">
+                <h5>{{ mensaje }}</h5>
+            </div>
+        </form>
+
+        
+    </aside>
+
+</main>
+
+{% endblock %}

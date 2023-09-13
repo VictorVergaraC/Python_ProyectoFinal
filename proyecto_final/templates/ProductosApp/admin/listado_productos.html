@@ -7,11 +7,14 @@
 {% block content %}
 
 <main class="d-flex flex-column justify-content-center">
-    <h4 class="my-2">Listado de Productos</h4>
+    <div class="d-flex">
+        <h4 class="my-2 mx-1">Listado de Productos</h4> 
+        <a href="{% url 'crear_producto' %}" class="btn btn-success btn-sm h-50 mx-1" title="Agregar"><i class="fa-solid fa-circle-plus fa-spin"></i></a>
+    </div>
 
     {% if productos %}
 
-    <table class="table my-2">
+    <table class="table table-borderless my-2">
         <thead>
             <tr>
                 <th>ID</th>
@@ -36,12 +39,16 @@
                 <td>${{ item.producto.precio }}</td>
                 <td class="d-flex">
                     <a href="{% url 'editar_producto' item.producto.id %}" class="btn btn-success btn-sm mx-1"><i class="fa-regular fa-pen-to-square"></i></a>
-                    <a href="#" class="btn btn-danger btn-sm mx-1"><i class="fa-regular fa-trash-can"></i></a>
+                    <a href="{% url 'eliminar_producto' item.producto.id %}" class="btn btn-danger btn-sm mx-1"><i class="fa-regular fa-trash-can"></i></a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <section class="my-2">
+        <p>{{ mensaje }}</p>
+    </section>
 
     {% else %}
 
