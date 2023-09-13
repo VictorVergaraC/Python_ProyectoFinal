@@ -190,6 +190,40 @@ def todos(request):
 
     return render(request, "ProductosApp/productos/home/home_contenido.html", context)
 
+def accesorios(request):
+    pageTitle = "Accesorios"
+    titleSection = "Todo en Accesorios"
+
+    message   = ""
+    allProducts = Producto.objects.filter(categoria = 4)
+
+    products      = True
+    productos_img = []
+
+    locale.setlocale(locale.LC_ALL, 'es_CL')
+    if not allProducts:
+        message  = "No existen productos! :("
+        products = False
+    else:
+        for product in allProducts:
+            imagen = ProductoImg.objects.filter(id_producto = product).first()
+            product.precio = locale.format_string("%d", product.precio, grouping=True)
+            productos_img.append({
+                "product": product,
+                "imagen": imagen.imagen
+            })
+
+    context = {
+        "title"       : pageTitle,
+        "titleSection": titleSection,
+        "msg"         : message,
+        "products"    : products,
+        "allProducts" : productos_img if len(allProducts) > 0 else allProducts,
+        "redirect"    : 'productos_proteinas'
+    }
+
+    return render(request, "ProductosApp/productos/home/home_contenido.html", context)
+
 def comentario(request, id):
     usuario = request.user
     cliente, created = User.objects.get_or_create(username=usuario)

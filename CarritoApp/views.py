@@ -185,7 +185,6 @@ def agregar_producto(request, id):
                         "id_carrito"  : item.id_carrito
                     })
             
-            total = locale.format_string("%d", carrito.total, grouping=True)
             contexto = {
                 "title"           : titulo,
                 # "carrito_detalle" : CarritoDetalle.objects.filter(id_carrito = carrito.id, cliente = cliente).select_related('id_producto'),

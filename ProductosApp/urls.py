@@ -11,6 +11,7 @@ urlpatterns = [
     path('creatinas/', creatines, name="productos_creatinas"),
     path('otros/', otros, name="productos_otros"),
     path('todos/', todos, name="productos_todos"),
+    path('accesorios/', accesorios, name="productos_accesorios"),
     path('detalle/<id>/', comentario, name="comentar_producto"),
     path('administrar/', administrar_productos, name="administrar_productos"),
     path('editarproducto/<id>', editar_producto, name="editar_producto"),
